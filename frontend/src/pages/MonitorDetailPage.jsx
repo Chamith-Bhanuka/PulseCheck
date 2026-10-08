@@ -59,6 +59,14 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
       success: check.success,
     }));
 
+  const recentChecks = history?.recent_checks || [];
+  const latestCheck = recentChecks.length > 0 ? recentChecks[0] : null;
+  const currentStatus = !monitor?.is_active
+    ? 'inactive'
+    : latestCheck
+      ? (latestCheck.success ? 'online' : 'offline')
+      : 'online';
+
   const uptimeStats = history?.uptime || {
     uptime_percentage: 100,
     total_checks: 0,
@@ -126,7 +134,7 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
                   <h1 className="text-2xl sm:text-3xl font-serif font-normal text-[#1F1E1B] dark:text-[#F0ECE1]">
                     {monitor?.name}
                   </h1>
-                  <StatusBadge status={monitor?.is_active ? 'online' : 'inactive'} />
+                  <StatusBadge status={currentStatus} />
                 </div>
                 <div className="flex items-center gap-2 mt-2 text-xs text-[#6B6861] dark:text-[#9E9B93] font-mono flex-wrap">
                   <span className="truncate max-w-[180px] xs:max-w-xs sm:max-w-none">{monitor?.url}</span>

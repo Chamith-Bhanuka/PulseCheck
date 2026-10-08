@@ -44,7 +44,40 @@ export default function PublicStatusPage({ monitorId, onBack }) {
     }));
 
   const uptimePercentage = history?.uptime?.uptime_percentage ?? 100;
-  const isHealthy = monitor?.is_active && uptimePercentage >= 99.0;
+  const recentChecks = history?.recent_checks || [];
+  const latestCheck = recentChecks.length > 0 ? recentChecks[0] : null;
+
+  // Compute operational health:
+  // - If monitor is inactive -> 'paused'
+  // - If no checks yet -> 'pending'
+  // - If latest check failed -> 'offline' (Service Outage)
+  // - If latest check passed, but 24h uptime is below 99% -> 'degraded' (Degraded Performance / Recent Incidents)
+  // - Otherwise -> 'online' (All Systems Operational)
+  let statusState = 'online';
+  let bannerTitle = 'All Systems Operational';
+  let bannerSubtitle = `Automated uptime telemetry for ${monitor?.name || 'monitored service'}`;
+
+  if (monitor && monitor.is_active === false) {
+    statusState = 'paused';
+    bannerTitle = 'Monitoring Paused';
+    bannerSubtitle = `Automated health checks are currently disabled for ${monitor?.name || 'this service'}`;
+  } else if (!latestCheck) {
+    statusState = 'pending';
+    bannerTitle = 'Awaiting Telemetry';
+    bannerSubtitle = `Initializing probe telemetry for ${monitor?.name || 'monitored service'}`;
+  } else if (!latestCheck.success) {
+    statusState = 'offline';
+    bannerTitle = 'Service Outage';
+    bannerSubtitle = `Latest probe failed with status HTTP ${latestCheck.status_code || 'Err'}`;
+  } else if (uptimePercentage < 99.0) {
+    statusState = 'degraded';
+    bannerTitle = 'Degraded Performance';
+    bannerSubtitle = `Service is online, but past incident recorded in last 24h (${uptimePercentage.toFixed(2)}% uptime)`;
+  }
+
+  const isOnline = statusState === 'online';
+  const isDegraded = statusState === 'degraded';
+  const isOffline = statusState === 'offline';
 
   if (loading && !monitor) {
     return (
@@ -93,26 +126,44 @@ export default function PublicStatusPage({ monitorId, onBack }) {
 
         {/* Global Operational Banner */}
         <div className={`p-6 sm:p-7 rounded-3xl border mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-soft ${
-          isHealthy
+          isOnline
             ? 'bg-[#E8F3EE] border-[#1E5E4B]/20 dark:bg-[#182B24] dark:border-[#2E8B6E]/30 text-[#1E5E4B] dark:text-[#2E8B6E]'
-            : 'bg-[#FDF2F0] border-[#F5D5CE] dark:bg-[#2E1D19] dark:border-[#4D2821] text-[#B85D36] dark:text-[#F87171]'
+            : isDegraded
+            ? 'bg-amber-50/80 border-amber-200/70 dark:bg-[#261E14] dark:border-amber-900/40 text-amber-900 dark:text-amber-200'
+            : isOffline
+            ? 'bg-[#FDF2F0] border-[#F5D5CE] dark:bg-[#2E1D19] dark:border-[#4D2821] text-[#B85D36] dark:text-[#F87171]'
+            : 'bg-[#F5F4EE] border-[#E6E3DA] dark:bg-[#242422] dark:border-[#2E2D29] text-[#6E6A63] dark:text-[#96938C]'
         }`}>
           <div className="flex items-center gap-3.5">
             <div className={`h-10 w-10 rounded-2xl flex items-center justify-center shrink-0 ${
-              isHealthy ? 'bg-[#1E5E4B]/10 text-[#1E5E4B] dark:text-[#2E8B6E]' : 'bg-[#B85D36]/10 text-[#B85D36]'
+              isOnline
+                ? 'bg-[#1E5E4B]/10 text-[#1E5E4B] dark:text-[#2E8B6E]'
+                : isDegraded
+                ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400'
+                : isOffline
+                ? 'bg-[#B85D36]/10 text-[#B85D36]'
+                : 'bg-[#6E6A63]/10 text-[#6E6A63]'
             }`}>
-              {isHealthy ? <CheckCircle2 className="h-6 w-6" /> : <AlertTriangle className="h-6 w-6" />}
+              {isOnline ? (
+                <CheckCircle2 className="h-6 w-6" />
+              ) : isDegraded ? (
+                <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+              ) : isOffline ? (
+                <AlertTriangle className="h-6 w-6" />
+              ) : (
+                <Activity className="h-6 w-6" />
+              )}
             </div>
             <div>
               <h1 className="text-xl font-serif font-normal text-[#1A1917] dark:text-[#F2EFE9]">
-                {isHealthy ? 'All Systems Operational' : 'Degraded Performance'}
+                {bannerTitle}
               </h1>
               <p className="text-xs text-[#6E6A63] dark:text-[#96938C] mt-0.5">
-                Automated uptime telemetry for {monitor?.name || 'monitored service'}
+                {bannerSubtitle}
               </p>
             </div>
           </div>
-          <StatusBadge status={isHealthy ? 'online' : 'offline'} size="md" />
+          <StatusBadge status={statusState} size="md" />
         </div>
 
         {/* Metric Details */}

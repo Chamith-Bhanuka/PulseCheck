@@ -3,6 +3,7 @@ import React from 'react';
 export default function StatusBadge({ status = 'online', text, size = 'md' }) {
   const isOnline = status === 'online';
   const isOffline = status === 'offline';
+  const isDegraded = status === 'degraded';
   const isPending = status === 'pending';
 
   const dotSize = size === 'sm' ? 'h-1.5 w-1.5' : 'h-2 w-2';
@@ -19,6 +20,12 @@ export default function StatusBadge({ status = 'online', text, size = 'md' }) {
       bg: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900/50',
       dot: 'bg-rose-600 dark:bg-rose-400',
       label: text || 'Offline',
+    };
+  } else if (isDegraded) {
+    config = {
+      bg: 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900/50',
+      dot: 'bg-amber-600 dark:bg-amber-400',
+      label: text || 'Degraded',
     };
   } else if (isPending) {
     config = {
