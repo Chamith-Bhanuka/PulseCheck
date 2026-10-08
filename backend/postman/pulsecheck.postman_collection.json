@@ -1,0 +1,325 @@
+{
+  "info": {
+    "name": "PulseCheck API",
+    "_postman_id": "pulsecheck-collection-v1",
+    "description": "Comprehensive API collection for PulseCheck Uptime Monitoring SaaS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.token) {",
+                  "        pm.environment.set('auth_token', json.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"founder@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.token) {",
+                  "        pm.environment.set('auth_token', json.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"founder@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Monitors",
+      "item": [
+        {
+          "name": "Create Monitor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.id) {",
+                  "        pm.environment.set('monitor_id', json.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Google DNS\",\n  \"url\": \"https://dns.google\",\n  \"method\": \"GET\",\n  \"expected_status\": 200,\n  \"interval_seconds\": 300\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/monitors",
+              "host": ["{{base_url}}"],
+              "path": ["api", "monitors"]
+            }
+          }
+        },
+        {
+          "name": "List Monitors",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/monitors",
+              "host": ["{{base_url}}"],
+              "path": ["api", "monitors"]
+            }
+          }
+        },
+        {
+          "name": "Get Monitor by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/monitors/{{monitor_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "monitors", "{{monitor_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Monitor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Google Primary DNS Updated\",\n  \"interval_seconds\": 300,\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/monitors/{{monitor_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "monitors", "{{monitor_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Monitor History (24h)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/monitors/{{monitor_id}}/history?period=24h",
+              "host": ["{{base_url}}"],
+              "path": ["api", "monitors", "{{monitor_id}}", "history"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "24h"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Monitor",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/monitors/{{monitor_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "monitors", "{{monitor_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Public Status",
+      "item": [
+        {
+          "name": "Public Status Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/status/{{monitor_id}}/public",
+              "host": ["{{base_url}}"],
+              "path": ["status", "{{monitor_id}}", "public"]
+            }
+          }
+        },
+        {
+          "name": "Public Status History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/status/{{monitor_id}}/public/history?period=24h",
+              "host": ["{{base_url}}"],
+              "path": ["api", "status", "{{monitor_id}}", "public", "history"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "24h"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Billing",
+      "item": [
+        {
+          "name": "Create Checkout Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/billing/checkout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "billing", "checkout"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
