@@ -15,9 +15,9 @@ pipeline {
         stage('Unit Testing & Validation') {
             steps {
                 echo 'Running Go tests in isolated environment...'
-                sh '''
-                    docker run --rm -v "$(pwd)/backend":/app -w /app golang:1.24-alpine sh -c "go test -v ./..."
-                '''
+                sh """
+                    docker run --rm -v "${WORKSPACE}/backend":/app -w /app golang:1.24-alpine sh -c "go test -v ./..."
+                """
             }
         }
 
@@ -57,7 +57,7 @@ pipeline {
                         --no-cpu-throttling \
                         --memory=512Mi \
                         --add-cloudsql-instances=${SQL_INSTANCE} \
-                        --set-env-vars="PORT=8080,DATABASE_URL=postgres://pulsecheck_admin:REDACTED_DB_PASSWORD@/pulsecheck?host=/cloudsql/${SQL_INSTANCE}&sslmode=disable,JWT_SECRET=REDACTED_JWT_SECRET,CLIENT_ORIGIN=*" \
+                        --set-env-vars="^#^PORT=8080#DATABASE_URL=postgres://pulsecheck_admin:REDACTED_DB_PASSWORD@/pulsecheck?host=/cloudsql/${SQL_INSTANCE}&sslmode=disable#JWT_SECRET=REDACTED_JWT_SECRET#CLIENT_ORIGIN=*" \
                         --project=${GCP_PROJECT} \
                         --quiet
                 """
