@@ -46,8 +46,8 @@ export default function Navbar({ currentView, onNavigate }) {
                       : 'text-[#6E6A63] dark:text-[#96938C] hover:text-[#1A1917] dark:hover:text-white'
                   }`}
                 >
-                  <LayoutDashboard className="h-3.5 w-3.5 shrink-0" />
-                  <span className="hidden xs:inline">Monitors</span>
+                  <LayoutDashboard className="h-3.5 w-3.5 sm:hidden shrink-0" />
+                  <span className="hidden sm:inline">Monitors</span>
                 </button>
 
                 <button
@@ -59,7 +59,7 @@ export default function Navbar({ currentView, onNavigate }) {
                   }`}
                 >
                   <Zap className="h-3.5 w-3.5 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
-                  <span className="hidden xs:inline">Billing</span>
+                  <span className="hidden sm:inline">Billing</span>
                   <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full sm:ml-1 ${
                     user?.plan === 'paid' 
                       ? 'bg-[#1E5E4B]/15 text-[#1E5E4B] dark:text-[#2E8B6E]' 
