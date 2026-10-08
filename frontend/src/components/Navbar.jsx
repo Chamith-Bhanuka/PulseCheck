@@ -1,82 +1,86 @@
 import React from 'react';
-import { Activity, ShieldCheck, Zap, LogOut, User, LayoutDashboard, Sparkles } from 'lucide-react';
+import { Activity, Sun, Moon, LogOut, User, LayoutDashboard, Zap } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Navbar({ currentView, onNavigate }) {
   const { isAuthenticated, user, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
 
   return (
-    <nav className="glass-nav sticky top-0 z-50 w-full transition-all">
+    <nav className="sticky top-0 z-50 w-full bg-[#FAF8F5]/90 dark:bg-[#161513]/90 backdrop-blur-md border-b border-[#E8E4DA] dark:border-[#2C2A25] transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Brand Logo */}
+          {/* Brand Logo - Claude inspired warm mark */}
           <div 
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-2.5 cursor-pointer group select-none"
             onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}
           >
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/40 transition-all">
-              <div className="w-full h-full bg-[#090d16] rounded-[10px] flex items-center justify-center">
-                <Activity className="h-5 w-5 text-emerald-400 group-hover:scale-110 transition-transform" />
-              </div>
+            {/* Claude-style warm terracotta sunburst/pulse mark */}
+            <div className="h-8 w-8 rounded-full bg-[#C25E3E]/10 dark:bg-[#D87754]/20 flex items-center justify-center text-[#C25E3E] dark:text-[#D87754] group-hover:scale-105 transition-transform">
+              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                <path d="M12 2a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm8-7a1 1 0 0 1 1 1v0a1 1 0 1 1-2 0v0a1 1 0 0 1 1-1zM4 11a1 1 0 0 1 1 1v0a1 1 0 1 1-2 0v0a1 1 0 0 1 1-1zm13.657-6.243a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 1 1-1.414 1.414l-1.414-1.414a1 1 0 0 1 0-1.414zM4.929 17.657a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 1 1-1.414 1.414l-1.414-1.414a1 1 0 0 1 0-1.414zm14.142 1.414a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 1 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zM6.343 4.757a1 1 0 0 1 0 1.414L4.929 7.586A1 1 0 1 1 3.515 6.172l1.414-1.414a1 1 0 0 1 1.414 0z"/>
+                <circle cx="12" cy="12" r="3.5" />
+              </svg>
             </div>
-            <div className="flex flex-col">
-              <span className="font-display font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-                PulseCheck
-              </span>
-              <span className="text-[10px] font-medium text-emerald-400/90 -mt-1 tracking-wider uppercase">
-                Uptime Intelligence
-              </span>
-            </div>
+            <span className="font-serif font-bold text-xl tracking-tight text-[#1F1E1B] dark:text-[#F0ECE1]">
+              PulseCheck
+            </span>
           </div>
 
-          {/* Navigation Links */}
-          <div className="flex items-center gap-3">
+          {/* Right Navigation */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-[#F0ECE1] hover:bg-[#F0ECE2] dark:hover:bg-[#252420] transition-colors"
+              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
+
             {isAuthenticated ? (
               <>
                 <button
                   onClick={() => onNavigate('dashboard')}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                     currentView === 'dashboard'
-                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                      ? 'bg-[#1F1E1B] text-white dark:bg-[#F0ECE1] dark:text-[#151413]'
+                      : 'text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-white'
                   }`}
                 >
-                  <LayoutDashboard className="h-4 w-4" />
-                  <span className="hidden sm:inline">Monitors</span>
+                  <LayoutDashboard className="h-3.5 w-3.5" />
+                  <span>Monitors</span>
                 </button>
 
                 <button
                   onClick={() => onNavigate('billing')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                     currentView === 'billing'
-                      ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                      ? 'bg-[#1F1E1B] text-white dark:bg-[#F0ECE1] dark:text-[#151413]'
+                      : 'text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-white'
                   }`}
                 >
-                  <Zap className="h-4 w-4 text-indigo-400" />
-                  <span className="hidden sm:inline">Billing</span>
-                  {user?.plan === 'paid' ? (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 ml-1">
-                      PRO
-                    </span>
-                  ) : (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-700 text-slate-300 ml-1">
-                      FREE
-                    </span>
-                  )}
+                  <Zap className="h-3.5 w-3.5 text-[#C25E3E]" />
+                  <span>Billing</span>
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-1 ${
+                    user?.plan === 'paid' 
+                      ? 'bg-[#C25E3E]/20 text-[#C25E3E]' 
+                      : 'bg-[#E5E0D5] dark:bg-[#33312B] text-[#6B6861] dark:text-[#9E9B93]'
+                  }`}>
+                    {user?.plan === 'paid' ? 'PRO' : 'FREE'}
+                  </span>
                 </button>
 
-                <div className="h-4 w-px bg-slate-800 mx-1 hidden sm:block" />
-
-                <div className="hidden md:flex items-center gap-2 text-xs text-slate-400 px-2 py-1 rounded bg-slate-900/60 border border-slate-800">
-                  <User className="h-3.5 w-3.5 text-slate-500" />
-                  <span className="max-w-[130px] truncate">{user?.email}</span>
+                <div className="hidden md:flex items-center gap-2 text-xs text-[#6B6861] dark:text-[#9E9B93] px-2.5 py-1 rounded-full bg-[#F3EFE6] dark:bg-[#22211D] border border-[#E5E0D5] dark:border-[#33312B]">
+                  <User className="h-3 w-3" />
+                  <span className="max-w-[120px] truncate">{user?.email}</span>
                 </div>
 
                 <button
                   onClick={logout}
                   title="Sign out"
-                  className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+                  className="p-2 text-[#6B6861] dark:text-[#9E9B93] hover:text-rose-600 dark:hover:text-rose-400 rounded-full hover:bg-[#F0ECE2] dark:hover:bg-[#252420] transition-colors"
                 >
                   <LogOut className="h-4 w-4" />
                 </button>
@@ -84,17 +88,22 @@ export default function Navbar({ currentView, onNavigate }) {
             ) : (
               <>
                 <button
-                  onClick={() => onNavigate('login')}
-                  className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+                  onClick={() => onNavigate('landing')}
+                  className="hidden md:inline-block text-xs font-medium text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-[#F0ECE1] px-2"
                 >
-                  Sign In
+                  Overview
+                </button>
+                <button
+                  onClick={() => onNavigate('login')}
+                  className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-[#F0ECE1] px-3 py-1.5"
+                >
+                  Login
                 </button>
                 <button
                   onClick={() => onNavigate('register')}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all active:scale-[0.98]"
+                  className="px-4 py-2 rounded-full text-xs font-semibold bg-[#1F1E1B] text-white hover:bg-black dark:bg-[#F0ECE1] dark:text-[#151413] dark:hover:bg-white shadow-sm transition-all"
                 >
-                  <Sparkles className="h-4 w-4" />
-                  <span>Start Free</span>
+                  Try PulseCheck
                 </button>
               </>
             )}

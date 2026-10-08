@@ -1,22 +1,27 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { api, setAuthToken } from '../api/client';
+import { api, setAuthToken, getAuthToken } from '../api/client';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  // SECURITY ARCHITECTURE NOTE:
-  // We explicitly store the JWT in memory (React component state) rather than in
-  // localStorage or sessionStorage. Browser storage is vulnerable to JavaScript
-  // extraction via Cross-Site Scripting (XSS). Keeping the short-lived token in
-  // memory ensures malicious third-party scripts cannot exfiltrate persistent sessions.
-  const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(() => getAuthToken());
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('pulsecheck_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(true);
 
   const applyAuth = (authToken, authUser) => {
     setToken(authToken);
     setUser(authUser);
     setAuthToken(authToken);
+    if (authUser) {
+      localStorage.setItem('pulsecheck_user', JSON.stringify(authUser));
+    }
   };
 
   const login = async (email, password) => {
@@ -35,21 +40,42 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     setAuthToken(null);
+    localStorage.removeItem('pulsecheck_user');
   };
 
   const refreshProfile = async () => {
-    if (!token) return;
+    const activeToken = getAuthToken();
+    if (!activeToken) return;
     try {
       const profile = await api.auth.me();
       setUser(profile);
+      localStorage.setItem('pulsecheck_user', JSON.stringify(profile));
     } catch (err) {
       console.error('Failed refreshing profile:', err);
+      if (err.status === 401) {
+        logout();
+      }
     }
   };
 
+  // Re-verify session on browser reload
   useEffect(() => {
-    // Initial load state completes immediately with clean memory state
-    setLoading(false);
+    const initAuth = async () => {
+      const savedToken = getAuthToken();
+      if (savedToken) {
+        try {
+          const profile = await api.auth.me();
+          setUser(profile);
+          localStorage.setItem('pulsecheck_user', JSON.stringify(profile));
+        } catch (err) {
+          console.warn('Session verification failed on refresh:', err);
+          logout();
+        }
+      }
+      setLoading(false);
+    };
+
+    initAuth();
   }, []);
 
   return (
@@ -58,7 +84,7 @@ export const AuthProvider = ({ children }) => {
         token,
         user,
         loading,
-        isAuthenticated: !!token,
+        isAuthenticated: !!token && !!user,
         login,
         register,
         logout,

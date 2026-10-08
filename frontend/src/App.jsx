@@ -52,10 +52,10 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#070b14] text-emerald-400">
+      <div className="min-h-screen flex items-center justify-center bg-[#FAF8F5] dark:bg-[#151413] text-[#C25E3E]">
         <div className="flex items-center gap-3">
-          <div className="h-6 w-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
-          <span className="font-display font-medium text-sm text-slate-300">Initializing PulseCheck...</span>
+          <div className="h-5 w-5 border-2 border-[#C25E3E] border-t-transparent rounded-full animate-spin" />
+          <span className="font-serif text-sm text-[#6B6861] dark:text-[#9E9B93]">Loading PulseCheck...</span>
         </div>
       </div>
     );
@@ -72,7 +72,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#070b14] text-slate-100 selection:bg-emerald-500 selection:text-slate-950">
+    <div className="min-h-screen flex flex-col bg-[#FAF8F5] dark:bg-[#151413] text-[#1F1E1B] dark:text-[#F0ECE1] selection:bg-[#C25E3E]/20 selection:text-[#C25E3E] transition-colors">
       <Navbar currentView={currentView} onNavigate={handleNavigate} />
 
       <main className="flex-1">

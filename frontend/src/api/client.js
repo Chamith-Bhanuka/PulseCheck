@@ -1,7 +1,14 @@
-let inMemoryToken = null;
+let inMemoryToken = typeof window !== 'undefined' ? localStorage.getItem('pulsecheck_token') : null;
 
 export const setAuthToken = (token) => {
   inMemoryToken = token;
+  if (typeof window !== 'undefined') {
+    if (token) {
+      localStorage.setItem('pulsecheck_token', token);
+    } else {
+      localStorage.removeItem('pulsecheck_token');
+    }
+  }
 };
 
 export const getAuthToken = () => inMemoryToken;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Plus, Search, ExternalLink, Trash2, Edit2, Clock, 
-  Activity, ArrowUpRight, Copy, Check, AlertCircle, RefreshCw, Eye
+  Activity, ArrowUpRight, Copy, Check, AlertCircle, RefreshCw 
 } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
@@ -75,23 +75,23 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
   const activeCount = monitors.filter((m) => m.is_active).length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* 1. Header & Stats Overview */}
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold font-display text-white">
-            Monitors Dashboard
+          <h1 className="text-3xl font-serif font-normal text-[#1F1E1B] dark:text-[#F0ECE1]">
+            Monitors
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Real-time status and health analytics across all configured endpoints
+          <p className="text-xs sm:text-sm text-[#6B6861] dark:text-[#9E9B93] mt-1">
+            Real-time status and health telemetry across all configured services
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={fetchMonitors}
-            className="p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
-            title="Refresh monitors"
+            className="p-2 rounded-xl border border-[#E5E0D5] dark:border-[#33312B] bg-white dark:bg-[#1E1D1A] text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-white transition-colors"
+            title="Refresh"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
@@ -102,118 +102,121 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
               setIsModalOpen(true);
             }}
             disabled={monitors.length >= maxMonitors}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#1F1E1B] hover:bg-black text-white dark:bg-[#F0ECE1] dark:text-[#151413] dark:hover:bg-white text-xs font-semibold shadow-xs active:scale-[0.98] transition-all disabled:opacity-50"
           >
             <Plus className="h-4 w-4" />
-            <span>Add Monitor</span>
+            <span>New Monitor</span>
           </button>
         </div>
       </div>
 
-      {/* 2. Metric Stat Cards */}
+      {/* Overview Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800">
-          <span className="text-xs font-medium text-slate-400">Total Monitored</span>
+        <div className="bg-white dark:bg-[#1E1D1A] p-5 rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft">
+          <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Active Services</span>
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-extrabold text-white font-display">
+            <span className="text-3xl font-serif font-normal text-[#1F1E1B] dark:text-[#F0ECE1]">
               {monitors.length}
             </span>
-            <span className="text-xs text-slate-500">/ {maxMonitors} quota</span>
+            <span className="text-xs text-[#8C887F]">/ {maxMonitors} quota</span>
           </div>
-          <div className="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
+          <div className="w-full bg-[#F3EFE6] dark:bg-[#2A2925] h-1.5 rounded-full mt-3 overflow-hidden">
             <div 
-              className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+              className="bg-[#1F1E1B] dark:bg-[#F0ECE1] h-full rounded-full transition-all duration-500"
               style={{ width: `${Math.min((monitors.length / maxMonitors) * 100, 100)}%` }}
             />
           </div>
         </div>
 
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800">
-          <span className="text-xs font-medium text-slate-400">Active Checkers</span>
+        <div className="bg-white dark:bg-[#1E1D1A] p-5 rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft">
+          <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Healthy Targets</span>
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-extrabold text-emerald-400 font-display">
+            <span className="text-3xl font-serif font-normal text-[#1E6B52] dark:text-[#34D399]">
               {activeCount}
             </span>
-            <span className="text-xs text-slate-500">operational</span>
+            <span className="text-xs text-[#8C887F]">running probes</span>
           </div>
-          <span className="inline-block mt-3 text-[11px] text-emerald-400/90 font-medium">
-            Worker pool sync enabled
+          <span className="inline-block mt-3 text-[11px] text-[#6B6861] dark:text-[#9E9B93]">
+            Worker pool sync active
           </span>
         </div>
 
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800">
-          <span className="text-xs font-medium text-slate-400">Current Plan</span>
+        <div className="bg-white dark:bg-[#1E1D1A] p-5 rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft">
+          <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Subscription Tier</span>
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-2xl font-bold text-white uppercase font-display">
+            <span className="text-2xl font-serif font-normal text-[#1F1E1B] dark:text-[#F0ECE1] uppercase">
               {user?.plan || 'Free'}
             </span>
             {isPaid && (
-              <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#C25E3E]/10 text-[#C25E3E]">
                 PRO
               </span>
             )}
           </div>
-          <span className="inline-block mt-3 text-[11px] text-slate-400">
-            {isPaid ? '30s frequency unlocked' : '5-min frequency'}
+          <span className="inline-block mt-3 text-[11px] text-[#6B6861] dark:text-[#9E9B93]">
+            {isPaid ? '30-second frequency' : '5-minute frequency'}
           </span>
         </div>
 
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#1E1D1A] p-5 rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-400">Subscription Tier</span>
+            <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Plan Options</span>
             {!isPaid && (
               <button
                 onClick={() => onNavigate('billing')}
-                className="text-xs text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-0.5"
+                className="text-xs text-[#C25E3E] hover:underline font-semibold flex items-center gap-0.5"
               >
                 <span>Upgrade</span>
                 <ArrowUpRight className="h-3 w-3" />
               </button>
             )}
           </div>
-          <p className="text-xs text-slate-400 mt-2">
+          <p className="text-xs text-[#8C887F] dark:text-[#807D75] mt-2">
             {isPaid 
               ? '50 monitors with instant webhook alerting.' 
-              : 'Upgrade to Pro for 30-second interval checks and 50 monitors.'}
+              : 'Upgrade to Pro for 30s checks and 50 monitors.'}
           </p>
         </div>
       </div>
 
-      {/* 3. Search and Filters */}
+      {/* Search Input */}
       <div className="flex items-center gap-4 mb-6">
-        <div className="relative flex-1 max-w-md">
-          <Search className="h-4 w-4 text-slate-500 absolute left-3.5 top-3" />
+        <div className="relative flex-1 max-w-sm">
+          <Search className="h-4 w-4 text-[#8C887F] absolute left-3 top-2.5" />
           <input
             type="text"
-            placeholder="Search monitors by name or URL..."
+            placeholder="Search by name or URL..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 transition-all"
+            className="w-full pl-9 pr-4 py-2 bg-white dark:bg-[#1E1D1A] border border-[#E5E0D5] dark:border-[#33312B] rounded-xl text-xs text-[#1F1E1B] dark:text-[#F0ECE1] placeholder-[#A8A49C] focus:outline-none focus:border-[#C25E3E] transition-colors"
           />
         </div>
       </div>
 
-      {/* 4. Monitors List Table / Empty State */}
+      {/* Error state */}
       {error && (
-        <div className="flex items-center gap-2 p-4 text-sm text-rose-300 bg-rose-500/10 border border-rose-500/20 rounded-2xl mb-6">
-          <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
+        <div className="flex items-center gap-2 p-3 text-xs text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 rounded-xl mb-6">
+          <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" />
           <span>{error}</span>
         </div>
       )}
 
+      {/* Monitor Cards List */}
       {loading && monitors.length === 0 ? (
-        <div className="glass-panel p-16 rounded-2xl border border-slate-800 text-center">
-          <RefreshCw className="h-8 w-8 text-emerald-400 animate-spin mx-auto mb-4" />
-          <p className="text-sm text-slate-400">Loading monitor telemetry...</p>
+        <div className="p-16 text-center bg-white dark:bg-[#1E1D1A] rounded-2xl border border-[#E5E0D5] dark:border-[#33312B]">
+          <RefreshCw className="h-6 w-6 text-[#8C887F] animate-spin mx-auto mb-3" />
+          <p className="text-xs text-[#6B6861] dark:text-[#9E9B93]">Loading monitors...</p>
         </div>
       ) : filteredMonitors.length === 0 ? (
-        <div className="glass-panel p-16 rounded-3xl border border-slate-800 text-center">
-          <div className="h-14 w-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mx-auto mb-4">
-            <Activity className="h-7 w-7" />
+        <div className="p-16 text-center bg-white dark:bg-[#1E1D1A] rounded-3xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft">
+          <div className="h-12 w-12 rounded-full bg-[#FAF8F5] dark:bg-[#252420] border border-[#E5E0D5] dark:border-[#33312B] flex items-center justify-center text-[#C25E3E] mx-auto mb-3">
+            <Activity className="h-6 w-6" />
           </div>
-          <h3 className="text-lg font-semibold text-white font-display">No monitors found</h3>
-          <p className="text-sm text-slate-400 mt-1 max-w-sm mx-auto">
-            {search ? 'No endpoints match your search filter.' : 'You have not created any uptime monitors yet.'}
+          <h3 className="font-serif text-lg font-normal text-[#1F1E1B] dark:text-[#F0ECE1]">
+            No monitors found
+          </h3>
+          <p className="text-xs text-[#6B6861] dark:text-[#9E9B93] mt-1 max-w-sm mx-auto">
+            {search ? 'No endpoints match your query.' : 'Configure your first API endpoint to start background monitoring.'}
           </p>
           {!search && (
             <button
@@ -221,45 +224,45 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
                 setEditingMonitor(null);
                 setIsModalOpen(true);
               }}
-              className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm shadow-lg shadow-emerald-500/20 transition-all"
+              className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1F1E1B] hover:bg-black text-white dark:bg-[#F0ECE1] dark:text-[#151413] dark:hover:bg-white text-xs font-semibold shadow-xs transition-all"
             >
-              <Plus className="h-4 w-4" />
-              <span>Deploy First Monitor</span>
+              <Plus className="h-3.5 w-3.5" />
+              <span>Add Your First Monitor</span>
             </button>
           )}
         </div>
       ) : (
-        <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
-          <div className="divide-y divide-slate-800/80">
+        <div className="bg-white dark:bg-[#1E1D1A] rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft overflow-hidden">
+          <div className="divide-y divide-[#EAE6DC] dark:divide-[#2C2A25]">
             {filteredMonitors.map((mon) => (
               <div
                 key={mon.id}
                 onClick={() => onSelectMonitor(mon.id)}
-                className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-850/50 transition-colors cursor-pointer group"
+                className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#FAF8F5] dark:hover:bg-[#23221E] transition-colors cursor-pointer group"
               >
-                {/* Left details */}
+                {/* Left metadata */}
                 <div className="flex items-start gap-3.5">
-                  <div className="h-10 w-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 group-hover:text-emerald-400 group-hover:border-emerald-500/30 transition-all shrink-0 mt-0.5 sm:mt-0">
-                    <Activity className="h-5 w-5" />
+                  <div className="h-9 w-9 rounded-xl bg-[#FAF8F5] dark:bg-[#252420] border border-[#E5E0D5] dark:border-[#33312B] flex items-center justify-center text-[#6B6861] dark:text-[#9E9B93] group-hover:text-[#C25E3E] transition-colors shrink-0 mt-0.5 sm:mt-0">
+                    <Activity className="h-4 w-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2.5">
-                      <h4 className="text-base font-semibold text-white group-hover:text-emerald-300 transition-colors">
+                      <h4 className="text-sm font-semibold text-[#1F1E1B] dark:text-[#F0ECE1] group-hover:text-[#C25E3E] transition-colors">
                         {mon.name}
                       </h4>
                       <StatusBadge status={mon.is_active ? 'online' : 'inactive'} size="sm" />
                     </div>
-                    <div className="flex items-center gap-3 mt-1 text-xs text-slate-400">
-                      <span className="font-mono text-slate-500 max-w-[200px] sm:max-w-xs truncate">
+                    <div className="flex items-center gap-2.5 mt-1 text-xs text-[#6B6861] dark:text-[#9E9B93]">
+                      <span className="font-mono text-[11px] text-[#8C887F] truncate max-w-[200px] sm:max-w-xs">
                         {mon.url}
                       </span>
-                      <span className="text-slate-600">&bull;</span>
-                      <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px]">
+                      <span>&bull;</span>
+                      <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#FAF8F5] dark:bg-[#252420] border border-[#E5E0D5] dark:border-[#33312B]">
                         {mon.method}
                       </span>
-                      <span className="text-slate-600">&bull;</span>
-                      <span className="flex items-center gap-1 text-slate-400">
-                        <Clock className="h-3 w-3 text-slate-500" />
+                      <span>&bull;</span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-3 w-3 text-[#8C887F]" />
                         <span>{mon.interval_seconds}s</span>
                       </span>
                     </div>
@@ -267,16 +270,16 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
                 </div>
 
                 {/* Right actions */}
-                <div className="flex items-center gap-2 self-end sm:self-center">
+                <div className="flex items-center gap-1.5 self-end sm:self-center">
                   <button
                     onClick={(e) => copyPublicLink(mon.id, e)}
-                    className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-                    title="Copy Public Status Page URL"
+                    className="p-2 rounded-lg text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-white hover:bg-[#F3EFE6] dark:hover:bg-[#2A2925] transition-colors"
+                    title="Copy Public Link"
                   >
                     {copiedId === mon.id ? (
-                      <Check className="h-4 w-4 text-emerald-400" />
+                      <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
                     ) : (
-                      <Copy className="h-4 w-4" />
+                      <Copy className="h-3.5 w-3.5" />
                     )}
                   </button>
 
@@ -286,22 +289,22 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
                       setEditingMonitor(mon);
                       setIsModalOpen(true);
                     }}
-                    className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-                    title="Edit Monitor"
+                    className="p-2 rounded-lg text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-white hover:bg-[#F3EFE6] dark:hover:bg-[#2A2925] transition-colors"
+                    title="Edit"
                   >
-                    <Edit2 className="h-4 w-4" />
+                    <Edit2 className="h-3.5 w-3.5" />
                   </button>
 
                   <button
                     onClick={(e) => handleDelete(mon.id, e)}
-                    className="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
-                    title="Delete Monitor"
+                    className="p-2 rounded-lg text-[#6B6861] dark:text-[#9E9B93] hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+                    title="Delete"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3.5 w-3.5" />
                   </button>
 
-                  <div className="pl-2 border-l border-slate-800">
-                    <span className="text-xs text-slate-500 group-hover:text-emerald-400 transition-colors flex items-center gap-1 font-medium">
+                  <div className="pl-2 border-l border-[#E5E0D5] dark:border-[#33312B]">
+                    <span className="text-xs text-[#8C887F] group-hover:text-[#1F1E1B] dark:group-hover:text-white transition-colors flex items-center gap-0.5 font-medium">
                       <span>View</span>
                       <ArrowUpRight className="h-3.5 w-3.5" />
                     </span>
@@ -313,7 +316,7 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
         </div>
       )}
 
-      {/* Monitor Create/Edit Modal */}
+      {/* Create / Edit Modal */}
       <CreateMonitorModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

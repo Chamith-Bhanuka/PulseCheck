@@ -8,33 +8,36 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
+        claude: {
+          bg: '#FAF8F5',
+          surface: '#FFFFFF',
+          subtle: '#F3EFE6',
+          border: '#E5E0D5',
+          text: '#1F1E1B',
+          muted: '#68655E',
+          terracotta: '#C25E3E',
+          accent: '#C25E3E',
+          'dark-bg': '#151413',
+          'dark-surface': '#1E1D1A',
+          'dark-subtle': '#262521',
+          'dark-border': '#33312B',
+          'dark-text': '#F0ECE1',
+          'dark-muted': '#9B978D',
+          'dark-accent': '#D87754',
         },
-        dark: {
-          900: '#090d16',
-          800: '#0f172a',
-          700: '#1e293b',
-          600: '#334155',
-        }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Outfit', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        serif: ['Lora', 'Georgia', 'serif'],
+        display: ['Lora', 'serif'],
       },
-      animation: {
-        'pulse-fast': 'pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'float': 'float 6s ease-in-out infinite',
+      boxShadow: {
+        'soft': '0 2px 8px -2px rgba(28, 25, 23, 0.05), 0 4px 16px -4px rgba(28, 25, 23, 0.08)',
+        'window': '0 10px 30px -5px rgba(28, 25, 23, 0.12), 0 0 1px rgba(28, 25, 23, 0.2)',
       },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
-        }
+      backgroundImage: {
+        'grid-pattern': "radial-gradient(#D5CEBE 1px, transparent 1px)",
+        'dark-grid-pattern': "radial-gradient(#3A3730 1px, transparent 1px)",
       }
     },
   },
