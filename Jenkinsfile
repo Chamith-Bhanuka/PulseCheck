@@ -57,7 +57,7 @@ pipeline {
                         --no-cpu-throttling \
                         --memory=512Mi \
                         --add-cloudsql-instances=${SQL_INSTANCE} \
-                        --set-env-vars="^#^PORT=8080#DATABASE_URL=postgres://pulsecheck_admin:REDACTED_DB_PASSWORD@/pulsecheck?host=/cloudsql/${SQL_INSTANCE}#JWT_SECRET=REDACTED_JWT_SECRET#CLIENT_ORIGIN=*" \
+                        --set-env-vars="^#^DATABASE_URL=postgres://pulsecheck_admin:REDACTED_DB_PASSWORD@/pulsecheck?host=/cloudsql/${SQL_INSTANCE}#JWT_SECRET=REDACTED_JWT_SECRET#CLIENT_ORIGIN=*" \
                         --project=${GCP_PROJECT} \
                         --quiet
                 """
