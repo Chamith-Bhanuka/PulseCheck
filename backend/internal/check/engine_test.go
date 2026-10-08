@@ -114,6 +114,9 @@ func (m *mockUserRepoForCheck) GetByEmail(ctx context.Context, email string) (*u
 func (m *mockUserRepoForCheck) GetByID(ctx context.Context, id string) (*user.User, error) {
 	return &user.User{ID: id, Email: "user@pulsecheck.dev"}, nil
 }
+func (m *mockUserRepoForCheck) GetByStripeCustomerID(ctx context.Context, customerID string) (*user.User, error) {
+	return nil, nil
+}
 func (m *mockUserRepoForCheck) UpdatePlan(ctx context.Context, id, plan string, customerID, subID *string) error {
 	return nil
 }
