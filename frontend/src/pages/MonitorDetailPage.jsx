@@ -177,7 +177,7 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
 
               <div className="p-4 rounded-2xl bg-[#FAF8F5] dark:bg-[#161513] border border-[#E5E0D5] dark:border-[#33312B]">
                 <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Completed Probes</span>
-                <div className="text-2xl font-serif font-normal text-[#1F1E1B] dark:text-[#F0ECE1] mt-1">
+                <div className="text-2xl font-serif font-normal text-[#1A1917] dark:text-[#F2EFE9] mt-1">
                   {uptimeStats.total_checks}
                 </div>
                 <span className="text-[11px] text-[#8C887F] mt-1 block">
@@ -185,9 +185,9 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
                 </span>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#FAF8F5] dark:bg-[#161513] border border-[#E5E0D5] dark:border-[#33312B]">
-                <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Incidents</span>
-                <div className="text-2xl font-serif font-normal text-[#C25E3E] mt-1">
+              <div className="p-4 rounded-2xl bg-[#F8F7F2] dark:bg-[#171716] border border-[#E6E3DA] dark:border-[#2E2D29]">
+                <span className="text-xs font-medium text-[#6E6A63] dark:text-[#96938C]">Incidents</span>
+                <div className="text-2xl font-serif font-normal text-[#B85D36] mt-1">
                   {uptimeStats.failed_checks}
                 </div>
                 <span className="text-[11px] text-[#8C887F] mt-1 block">
@@ -198,17 +198,17 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
           </div>
 
           {/* Response Latency Chart (Recharts) */}
-          <div className="bg-white dark:bg-[#1E1D1A] p-6 sm:p-8 rounded-3xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft mb-8">
+          <div className="bg-white dark:bg-[#1C1C1B] p-6 sm:p-8 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft mb-8">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="font-serif text-lg font-normal text-[#1F1E1B] dark:text-[#F0ECE1]">
+                <h3 className="font-serif text-lg font-normal text-[#1A1917] dark:text-[#F2EFE9]">
                   Response Latency Trend (ms)
                 </h3>
                 <p className="text-xs text-[#8C887F] mt-0.5">
                   Chronological HTTP ping duration recorded by Go edge workers
                 </p>
               </div>
-              <span className="text-[10px] font-mono font-medium text-[#1E6B52] dark:text-[#34D399] bg-[#EBF5EE] dark:bg-[#1A2E24] px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-mono font-medium text-[#1E5E4B] dark:text-[#2E8B6E] bg-[#E8F3EE] dark:bg-[#182B24] border border-[#1E5E4B]/20 dark:border-[#2E8B6E]/30 px-2 py-0.5 rounded-full">
                 Active Telemetry
               </span>
             </div>
@@ -222,21 +222,21 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
-                      <linearGradient id="warmLatencyGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={isDark ? "#D87754" : "#C25E3E"} stopOpacity={0.2} />
-                        <stop offset="95%" stopColor={isDark ? "#D87754" : "#C25E3E"} stopOpacity={0.0} />
+                      <linearGradient id="pulseLatencyGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={isDark ? "#2E8B6E" : "#1E5E4B"} stopOpacity={0.25} />
+                        <stop offset="95%" stopColor={isDark ? "#2E8B6E" : "#1E5E4B"} stopOpacity={0.0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#2C2A25" : "#EAE6DC"} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#2A2926" : "#E8E5DD"} />
                     <XAxis dataKey="time" stroke="#8C887F" tick={{ fontSize: 10 }} />
                     <YAxis stroke="#8C887F" tick={{ fontSize: 10 }} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: isDark ? '#1E1D1A' : '#FFFFFF',
-                        borderColor: isDark ? '#33312B' : '#E5E0D5',
+                        backgroundColor: isDark ? '#1C1C1B' : '#FFFFFF',
+                        borderColor: isDark ? '#2E2D29' : '#E6E3DA',
                         borderRadius: '12px',
                         fontSize: '11px',
-                        color: isDark ? '#F0ECE1' : '#1F1E1B',
+                        color: isDark ? '#F2EFE9' : '#1A1917',
                         boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                       }}
                     />
@@ -244,10 +244,10 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
                       type="monotone"
                       dataKey="latency"
                       name="Latency (ms)"
-                      stroke={isDark ? "#D87754" : "#C25E3E"}
+                      stroke={isDark ? "#2E8B6E" : "#1E5E4B"}
                       strokeWidth={2}
                       fillOpacity={1}
-                      fill="url warmLatencyGradient"
+                      fill="url(#pulseLatencyGradient)"
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -272,17 +272,17 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
                     <th className="pb-3 font-medium">Detail</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#EAE6DC] dark:divide-[#2C2A25] font-mono text-xs">
+                <tbody className="divide-y divide-[#ECE9E1] dark:divide-[#2A2926] font-mono text-xs">
                   {(history?.recent_checks || []).map((chk) => (
-                    <tr key={chk.id} className="hover:bg-[#FAF8F5] dark:hover:bg-[#23221E] transition-colors">
+                    <tr key={chk.id} className="hover:bg-[#F8F7F2] dark:hover:bg-[#222220] transition-colors">
                       <td className="py-3">
                         {chk.success ? (
-                          <span className="inline-flex items-center gap-1 text-[#1E6B52] dark:text-[#34D399] font-medium">
+                          <span className="inline-flex items-center gap-1 text-[#1E5E4B] dark:text-[#2E8B6E] font-medium">
                             <CheckCircle2 className="h-3.5 w-3.5" />
                             <span>Passed</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[#C25E3E] font-medium">
+                          <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 font-medium">
                             <XCircle className="h-3.5 w-3.5" />
                             <span>Failed</span>
                           </span>
@@ -291,13 +291,13 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
                       <td className="py-3">
                         <span className={`px-2 py-0.5 rounded font-bold ${
                           chk.status_code >= 200 && chk.status_code < 300
-                            ? 'bg-[#EBF5EE] text-[#1E6B52] dark:bg-[#1A2E24] dark:text-[#6EE7B7]'
-                            : 'bg-[#FDF2F0] text-[#C25E3E] dark:bg-[#2E1D19] dark:text-[#F87171]'
+                            ? 'bg-[#E8F3EE] text-[#1E5E4B] dark:bg-[#182B24] dark:text-[#2E8B6E]'
+                            : 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300'
                         }`}>
                           {chk.status_code || '000'}
                         </span>
                       </td>
-                      <td className="py-3 text-[#1F1E1B] dark:text-[#F0ECE1]">
+                      <td className="py-3 text-[#1A1917] dark:text-[#F2EFE9]">
                         {chk.response_time_ms}ms
                       </td>
                       <td className="py-3 text-[#8C887F]">

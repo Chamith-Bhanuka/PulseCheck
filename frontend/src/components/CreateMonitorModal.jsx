@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Globe, AlertCircle, ArrowUpRight } from 'lucide-react';
+import { X, Activity, AlertCircle, ArrowUpRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialData = null, onUpgradeClick }) {
@@ -10,7 +10,7 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
   const [url, setUrl] = useState('');
   const [method, setMethod] = useState('GET');
   const [expectedStatus, setExpectedStatus] = useState(200);
-  const [intervalSeconds, setIntervalSeconds] = useState(isPaid ? 30 : 300);
+  const [intervalSeconds, setIntervalSeconds] = useState(300);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -20,7 +20,7 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
       setUrl(initialData.url || '');
       setMethod(initialData.method || 'GET');
       setExpectedStatus(initialData.expected_status || 200);
-      setIntervalSeconds(initialData.interval_seconds || (isPaid ? 30 : 300));
+      setIntervalSeconds(initialData.interval_seconds || 300);
     } else {
       setName('');
       setUrl('');
@@ -42,11 +42,6 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
       cleanUrl = `https://${cleanUrl}`;
     }
 
-    if (!cleanUrl) {
-      setError('Please provide a valid URL');
-      return;
-    }
-
     setLoading(true);
     try {
       await onSubmit({
@@ -66,20 +61,20 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-      <div className="w-full max-w-lg bg-white dark:bg-[#1E1D1A] rounded-3xl border border-[#E5E0D5] dark:border-[#33312B] shadow-2xl overflow-hidden text-left">
+      <div className="w-full max-w-lg bg-white dark:bg-[#1C1C1B] rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-2xl overflow-hidden text-left">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E4DA] dark:border-[#2C2A25]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E5DD] dark:border-[#2A2926]">
           <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-full bg-[#FAF8F5] dark:bg-[#252420] border border-[#E5E0D5] dark:border-[#33312B] flex items-center justify-center text-[#C25E3E]">
-              <Globe className="h-4 w-4" />
+            <div className="h-8 w-8 rounded-xl bg-[#1E5E4B]/10 dark:bg-[#2E8B6E]/20 border border-[#1E5E4B]/20 dark:border-[#2E8B6E]/30 flex items-center justify-center text-[#1E5E4B] dark:text-[#2E8B6E]">
+              <Activity className="w-4 h-4 stroke-[2.2]" />
             </div>
-            <h3 className="font-serif text-lg font-normal text-[#1F1E1B] dark:text-[#F0ECE1]">
+            <h3 className="font-serif text-lg font-normal text-[#1A1917] dark:text-[#F2EFE9]">
               {initialData ? 'Edit Monitor' : 'Create New Monitor'}
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full text-[#8C887F] hover:text-[#1F1E1B] dark:hover:text-white hover:bg-[#F3EFE6] dark:hover:bg-[#2A2925] transition-colors"
+            className="p-1 rounded-full text-[#8C887F] hover:text-[#1A1917] dark:hover:text-white hover:bg-[#F5F4EE] dark:hover:bg-[#2A2925] transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -95,7 +90,7 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
           )}
 
           <div>
-            <label className="block text-xs font-medium text-[#6B6861] dark:text-[#9E9B93] mb-1.5">
+            <label className="block text-xs font-medium text-[#6E6A63] dark:text-[#96938C] mb-1.5">
               Service Name
             </label>
             <input
@@ -103,12 +98,12 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
               placeholder="e.g. Production API"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#FAF8F5] dark:bg-[#161513] border border-[#E5E0D5] dark:border-[#33312B] rounded-xl text-xs text-[#1F1E1B] dark:text-[#F0ECE1] placeholder-[#A8A49C] focus:outline-none focus:border-[#C25E3E] transition-colors"
+              className="w-full px-3.5 py-2.5 bg-[#F8F7F2] dark:bg-[#171716] border border-[#E6E3DA] dark:border-[#2E2D29] rounded-xl text-xs text-[#1A1917] dark:text-[#F2EFE9] placeholder-[#96938C] focus:outline-none focus:border-[#1E5E4B] dark:focus:border-[#2E8B6E] transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#6B6861] dark:text-[#9E9B93] mb-1.5">
+            <label className="block text-xs font-medium text-[#6E6A63] dark:text-[#96938C] mb-1.5">
               Target URL *
             </label>
             <div className="relative">
@@ -118,7 +113,7 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
                 placeholder="https://api.yourdomain.com/health"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className="w-full pl-3.5 pr-16 py-2.5 bg-[#FAF8F5] dark:bg-[#161513] border border-[#E5E0D5] dark:border-[#33312B] rounded-xl text-xs text-[#1F1E1B] dark:text-[#F0ECE1] placeholder-[#A8A49C] focus:outline-none focus:border-[#C25E3E] transition-colors"
+                className="w-full pl-3.5 pr-16 py-2.5 bg-[#F8F7F2] dark:bg-[#171716] border border-[#E6E3DA] dark:border-[#2E2D29] rounded-xl text-xs text-[#1A1917] dark:text-[#F2EFE9] placeholder-[#96938C] focus:outline-none focus:border-[#1E5E4B] dark:focus:border-[#2E8B6E] transition-colors"
               />
               <span className="absolute right-3 top-2.5 text-[10px] text-[#8C887F] font-mono">
                 HTTPS
@@ -128,13 +123,13 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-[#6B6861] dark:text-[#9E9B93] mb-1.5">
+              <label className="block text-xs font-medium text-[#6E6A63] dark:text-[#96938C] mb-1.5">
                 HTTP Method
               </label>
               <select
                 value={method}
                 onChange={(e) => setMethod(e.target.value)}
-                className="w-full px-3 py-2.5 bg-[#FAF8F5] dark:bg-[#161513] border border-[#E5E0D5] dark:border-[#33312B] rounded-xl text-xs text-[#1F1E1B] dark:text-[#F0ECE1] focus:outline-none focus:border-[#C25E3E] transition-colors"
+                className="w-full px-3 py-2.5 bg-[#F8F7F2] dark:bg-[#171716] border border-[#E6E3DA] dark:border-[#2E2D29] rounded-xl text-xs text-[#1A1917] dark:text-[#F2EFE9] focus:outline-none focus:border-[#1E5E4B] dark:focus:border-[#2E8B6E] transition-colors"
               >
                 <option value="GET">GET</option>
                 <option value="POST">POST</option>
@@ -144,7 +139,7 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#6B6861] dark:text-[#9E9B93] mb-1.5">
+              <label className="block text-xs font-medium text-[#6E6A63] dark:text-[#96938C] mb-1.5">
                 Expected HTTP Status
               </label>
               <input
@@ -153,7 +148,7 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
                 max="599"
                 value={expectedStatus}
                 onChange={(e) => setExpectedStatus(e.target.value)}
-                className="w-full px-3 py-2.5 bg-[#FAF8F5] dark:bg-[#161513] border border-[#E5E0D5] dark:border-[#33312B] rounded-xl text-xs text-[#1F1E1B] dark:text-[#F0ECE1] focus:outline-none focus:border-[#C25E3E] transition-colors"
+                className="w-full px-3 py-2.5 bg-[#F8F7F2] dark:bg-[#171716] border border-[#E6E3DA] dark:border-[#2E2D29] rounded-xl text-xs text-[#1A1917] dark:text-[#F2EFE9] focus:outline-none focus:border-[#1E5E4B] dark:focus:border-[#2E8B6E] transition-colors"
               />
             </div>
           </div>
@@ -161,14 +156,14 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
           {/* Interval Configuration */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">
+              <label className="block text-xs font-medium text-[#6E6A63] dark:text-[#96938C]">
                 Check Frequency
               </label>
               {!isPaid && (
                 <button
                   type="button"
                   onClick={onUpgradeClick}
-                  className="text-xs text-[#C25E3E] hover:underline flex items-center gap-0.5 font-medium"
+                  className="text-xs text-[#1E5E4B] dark:text-[#2E8B6E] hover:underline flex items-center gap-0.5 font-medium"
                 >
                   <span>Unlock 30s checks</span>
                   <ArrowUpRight className="h-3 w-3" />
@@ -183,14 +178,14 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
                 onClick={() => isPaid && setIntervalSeconds(30)}
                 className={`py-2 px-3 rounded-xl text-xs font-medium border text-center transition-all ${
                   intervalSeconds === 30
-                    ? 'bg-[#1F1E1B] text-white dark:bg-[#F0ECE1] dark:text-[#151413] border-transparent'
+                    ? 'bg-[#1A1917] text-white dark:bg-[#F2EFE9] dark:text-[#141413] border-transparent shadow-xs'
                     : isPaid
-                    ? 'bg-[#FAF8F5] dark:bg-[#161513] border-[#E5E0D5] dark:border-[#33312B] text-[#6B6861] dark:text-[#9E9B93]'
-                    : 'bg-[#F5F2EB] dark:bg-[#1E1D1A] border-transparent text-[#A8A49C] cursor-not-allowed opacity-60'
+                    ? 'bg-[#F8F7F2] dark:bg-[#171716] border-[#E6E3DA] dark:border-[#2E2D29] text-[#6E6A63] dark:text-[#96938C]'
+                    : 'bg-[#F5F4EE] dark:bg-[#1C1C1B] border-transparent text-[#A8A49C] cursor-not-allowed opacity-60'
                 }`}
               >
                 <div>30 Seconds</div>
-                {!isPaid && <span className="text-[9px] text-[#C25E3E] font-bold">PRO</span>}
+                {!isPaid && <span className="text-[9px] text-[#B85D36] font-bold">PRO</span>}
               </button>
 
               <button
@@ -199,14 +194,14 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
                 onClick={() => isPaid && setIntervalSeconds(60)}
                 className={`py-2 px-3 rounded-xl text-xs font-medium border text-center transition-all ${
                   intervalSeconds === 60
-                    ? 'bg-[#1F1E1B] text-white dark:bg-[#F0ECE1] dark:text-[#151413] border-transparent'
+                    ? 'bg-[#1A1917] text-white dark:bg-[#F2EFE9] dark:text-[#141413] border-transparent shadow-xs'
                     : isPaid
-                    ? 'bg-[#FAF8F5] dark:bg-[#161513] border-[#E5E0D5] dark:border-[#33312B] text-[#6B6861] dark:text-[#9E9B93]'
-                    : 'bg-[#F5F2EB] dark:bg-[#1E1D1A] border-transparent text-[#A8A49C] cursor-not-allowed opacity-60'
+                    ? 'bg-[#F8F7F2] dark:bg-[#171716] border-[#E6E3DA] dark:border-[#2E2D29] text-[#6E6A63] dark:text-[#96938C]'
+                    : 'bg-[#F5F4EE] dark:bg-[#1C1C1B] border-transparent text-[#A8A49C] cursor-not-allowed opacity-60'
                 }`}
               >
                 <div>1 Minute</div>
-                {!isPaid && <span className="text-[9px] text-[#C25E3E] font-bold">PRO</span>}
+                {!isPaid && <span className="text-[9px] text-[#B85D36] font-bold">PRO</span>}
               </button>
 
               <button
@@ -214,8 +209,8 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
                 onClick={() => setIntervalSeconds(300)}
                 className={`py-2 px-3 rounded-xl text-xs font-medium border text-center transition-all ${
                   intervalSeconds === 300
-                    ? 'bg-[#1F1E1B] text-white dark:bg-[#F0ECE1] dark:text-[#151413] border-transparent'
-                    : 'bg-[#FAF8F5] dark:bg-[#161513] border-[#E5E0D5] dark:border-[#33312B] text-[#6B6861] dark:text-[#9E9B93]'
+                    ? 'bg-[#1A1917] text-white dark:bg-[#F2EFE9] dark:text-[#141413] border-transparent shadow-xs'
+                    : 'bg-[#F8F7F2] dark:bg-[#171716] border-[#E6E3DA] dark:border-[#2E2D29] text-[#6E6A63] dark:text-[#96938C]'
                 }`}
               >
                 <div>5 Minutes</div>
@@ -225,18 +220,18 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
           </div>
 
           {/* Action Buttons */}
-          <div className="pt-4 flex items-center justify-end gap-2.5 border-t border-[#E8E4DA] dark:border-[#2C2A25]">
+          <div className="pt-4 flex items-center justify-end gap-2.5 border-t border-[#E8E5DD] dark:border-[#2A2926]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-medium text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-white transition-colors"
+              className="px-4 py-2 text-xs font-medium text-[#6E6A63] dark:text-[#96938C] hover:text-[#1A1917] dark:hover:text-white transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 rounded-full text-xs font-semibold bg-[#1F1E1B] hover:bg-black text-white dark:bg-[#F0ECE1] dark:text-[#151413] dark:hover:bg-white shadow-xs transition-all disabled:opacity-50"
+              className="px-5 py-2 rounded-full text-xs font-semibold bg-[#1A1917] hover:bg-black text-white dark:bg-[#F2EFE9] dark:text-[#141413] dark:hover:bg-white shadow-xs transition-all disabled:opacity-50"
             >
               {loading ? 'Saving...' : initialData ? 'Save Changes' : 'Deploy Monitor'}
             </button>

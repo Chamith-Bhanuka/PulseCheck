@@ -9,27 +9,27 @@ export default function StatusBadge({ status = 'online', text, size = 'md' }) {
   const textSize = size === 'sm' ? 'text-[11px] px-2 py-0.5' : 'text-xs px-2.5 py-1';
 
   let config = {
-    bg: 'bg-[#EBF5EE] text-[#1E6B52] border-[#CDE5D4] dark:bg-[#1A2E24] dark:text-[#6EE7B7] dark:border-[#244234]',
-    dot: 'bg-[#1E6B52] dark:bg-[#34D399]',
+    bg: 'bg-[#E8F3EE] text-[#1E5E4B] border-[#1E5E4B]/20 dark:bg-[#182B24] dark:text-[#2E8B6E] dark:border-[#2E8B6E]/30',
+    dot: 'bg-[#1E5E4B] dark:bg-[#2E8B6E]',
     label: text || 'Operational',
   };
 
   if (isOffline) {
     config = {
-      bg: 'bg-[#FDF2F0] text-[#C25E3E] border-[#F5D5CE] dark:bg-[#2E1D19] dark:text-[#F87171] dark:border-[#4D2821]',
-      dot: 'bg-[#C25E3E] dark:bg-[#F87171]',
+      bg: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900/50',
+      dot: 'bg-rose-600 dark:bg-rose-400',
       label: text || 'Offline',
     };
   } else if (isPending) {
     config = {
-      bg: 'bg-[#FEF9EE] text-[#B45309] border-[#FDE6B8] dark:bg-[#2A2314] dark:text-[#FBBF24] dark:border-[#42371E]',
-      dot: 'bg-[#B45309] dark:bg-[#FBBF24]',
+      bg: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900/50',
+      dot: 'bg-amber-600 dark:bg-amber-400',
       label: text || 'Checking',
     };
   } else if (status === 'paused' || status === 'inactive') {
     config = {
-      bg: 'bg-[#F5F2EB] text-[#78716C] border-[#E5E0D5] dark:bg-[#24221E] dark:text-[#A8A29E] dark:border-[#38352F]',
-      dot: 'bg-[#78716C] dark:bg-[#A8A29E]',
+      bg: 'bg-[#F5F4EE] text-[#6E6A63] border-[#E6E3DA] dark:bg-[#242422] dark:text-[#96938C] dark:border-[#2E2D29]',
+      dot: 'bg-[#6E6A63] dark:bg-[#96938C]',
       label: text || 'Paused',
     };
   }

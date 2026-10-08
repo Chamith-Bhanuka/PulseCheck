@@ -8,22 +8,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        claude: {
-          bg: '#FAF8F5',
+        pulse: {
+          bg: '#FBFBF9',
           surface: '#FFFFFF',
-          subtle: '#F3EFE6',
-          border: '#E5E0D5',
-          text: '#1F1E1B',
-          muted: '#68655E',
-          terracotta: '#C25E3E',
-          accent: '#C25E3E',
-          'dark-bg': '#151413',
-          'dark-surface': '#1E1D1A',
-          'dark-subtle': '#262521',
-          'dark-border': '#33312B',
-          'dark-text': '#F0ECE1',
-          'dark-muted': '#9B978D',
-          'dark-accent': '#D87754',
+          subtle: '#F4F3EE',
+          border: '#E6E3DA',
+          text: '#1A1917',
+          muted: '#6E6A63',
+          brand: '#1E5E4B',
+          accent: '#B85D36',
+          'dark-bg': '#141413',
+          'dark-surface': '#1C1C1B',
+          'dark-subtle': '#242422',
+          'dark-border': '#2E2D29',
+          'dark-text': '#F2EFE9',
+          'dark-muted': '#96938C',
+          'dark-brand': '#2E8B6E',
+          'dark-accent': '#C96E47',
         },
       },
       fontFamily: {

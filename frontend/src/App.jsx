@@ -74,10 +74,10 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAF8F5] dark:bg-[#151413] text-[#C25E3E]">
+      <div className="min-h-screen flex items-center justify-center bg-[#FBFBF9] dark:bg-[#141413] text-[#1E5E4B] dark:text-[#2E8B6E]">
         <div className="flex items-center gap-3">
-          <div className="h-5 w-5 border-2 border-[#C25E3E] border-t-transparent rounded-full animate-spin" />
-          <span className="font-serif text-sm text-[#6B6861] dark:text-[#9E9B93]">Loading PulseCheck...</span>
+          <div className="h-5 w-5 border-2 border-[#1E5E4B] dark:border-[#2E8B6E] border-t-transparent rounded-full animate-spin" />
+          <span className="font-serif text-sm text-[#6E6A63] dark:text-[#96938C]">Loading PulseCheck...</span>
         </div>
       </div>
     );
@@ -94,7 +94,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF8F5] dark:bg-[#151413] text-[#1F1E1B] dark:text-[#F0ECE1] selection:bg-[#C25E3E]/20 selection:text-[#C25E3E] transition-colors">
+    <div className="min-h-screen flex flex-col bg-[#FBFBF9] dark:bg-[#141413] text-[#1A1917] dark:text-[#F2EFE9] selection:bg-[#1E5E4B]/20 selection:text-[#1E5E4B] transition-colors">
       <Navbar currentView={currentView} onNavigate={handleNavigate} />
 
       <main className="flex-1">

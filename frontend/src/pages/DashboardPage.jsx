@@ -79,10 +79,10 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-serif font-normal text-[#1F1E1B] dark:text-[#F0ECE1]">
+          <h1 className="text-3xl font-serif font-normal text-[#1A1917] dark:text-[#F2EFE9]">
             Monitors
           </h1>
-          <p className="text-xs sm:text-sm text-[#6B6861] dark:text-[#9E9B93] mt-1">
+          <p className="text-xs sm:text-sm text-[#6E6A63] dark:text-[#96938C] mt-1">
             Real-time status and health telemetry across all configured services
           </p>
         </div>
@@ -90,7 +90,7 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
         <div className="flex items-center gap-3">
           <button
             onClick={fetchMonitors}
-            className="p-2 rounded-xl border border-[#E5E0D5] dark:border-[#33312B] bg-white dark:bg-[#1E1D1A] text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-white transition-colors"
+            className="p-2 rounded-xl border border-[#E6E3DA] dark:border-[#2E2D29] bg-white dark:bg-[#1C1C1B] text-[#6E6A63] dark:text-[#96938C] hover:text-[#1A1917] dark:hover:text-white transition-colors shadow-xs"
             title="Refresh"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
@@ -102,7 +102,7 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
               setIsModalOpen(true);
             }}
             disabled={monitors.length >= maxMonitors}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#1F1E1B] hover:bg-black text-white dark:bg-[#F0ECE1] dark:text-[#151413] dark:hover:bg-white text-xs font-semibold shadow-xs active:scale-[0.98] transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#1A1917] hover:bg-black text-white dark:bg-[#F2EFE9] dark:text-[#141413] dark:hover:bg-white text-xs font-semibold shadow-xs active:scale-[0.98] transition-all disabled:opacity-50"
           >
             <Plus className="h-4 w-4" />
             <span>New Monitor</span>
@@ -112,59 +112,59 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
 
       {/* Overview Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white dark:bg-[#1E1D1A] p-5 rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft">
-          <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Active Services</span>
+        <div className="bg-white dark:bg-[#1C1C1B] p-5 rounded-2xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft">
+          <span className="text-xs font-medium text-[#6E6A63] dark:text-[#96938C]">Active Services</span>
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-serif font-normal text-[#1F1E1B] dark:text-[#F0ECE1]">
+            <span className="text-3xl font-serif font-normal text-[#1A1917] dark:text-[#F2EFE9]">
               {monitors.length}
             </span>
             <span className="text-xs text-[#8C887F]">/ {maxMonitors} quota</span>
           </div>
-          <div className="w-full bg-[#F3EFE6] dark:bg-[#2A2925] h-1.5 rounded-full mt-3 overflow-hidden">
-            <div 
-              className="bg-[#1F1E1B] dark:bg-[#F0ECE1] h-full rounded-full transition-all duration-500"
-              style={{ width: `${Math.min((monitors.length / maxMonitors) * 100, 100)}%` }}
+          <div className="w-full bg-[#F5F4EE] dark:bg-[#242422] h-1.5 rounded-full mt-3 overflow-hidden">
+            <div
+              className="bg-[#1E5E4B] dark:bg-[#2E8B6E] h-full rounded-full transition-all"
+              style={{ width: `${Math.min(100, (monitors.length / maxMonitors) * 100)}%` }}
             />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#1E1D1A] p-5 rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft">
-          <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Healthy Targets</span>
+        <div className="bg-white dark:bg-[#1C1C1B] p-5 rounded-2xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft">
+          <span className="text-xs font-medium text-[#6E6A63] dark:text-[#96938C]">Engine Health</span>
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-serif font-normal text-[#1E6B52] dark:text-[#34D399]">
+            <span className="text-3xl font-serif font-normal text-emerald-600 dark:text-emerald-400">
               {activeCount}
             </span>
-            <span className="text-xs text-[#8C887F]">running probes</span>
+            <span className="text-xs text-[#8C887F]">active pings</span>
           </div>
-          <span className="inline-block mt-3 text-[11px] text-[#6B6861] dark:text-[#9E9B93]">
-            Worker pool sync active
+          <span className="inline-block mt-3 text-[11px] text-[#1E5E4B] dark:text-[#2E8B6E]">
+            Go worker pool active
           </span>
         </div>
 
-        <div className="bg-white dark:bg-[#1E1D1A] p-5 rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft">
-          <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Subscription Tier</span>
+        <div className="bg-white dark:bg-[#1C1C1B] p-5 rounded-2xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft">
+          <span className="text-xs font-medium text-[#6E6A63] dark:text-[#96938C]">Subscription Tier</span>
           <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-2xl font-serif font-normal text-[#1F1E1B] dark:text-[#F0ECE1] uppercase">
+            <span className="text-2xl font-serif font-normal text-[#1A1917] dark:text-[#F2EFE9] uppercase">
               {user?.plan || 'Free'}
             </span>
             {isPaid && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#C25E3E]/10 text-[#C25E3E]">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#B85D36]/15 text-[#B85D36]">
                 PRO
               </span>
             )}
           </div>
-          <span className="inline-block mt-3 text-[11px] text-[#6B6861] dark:text-[#9E9B93]">
+          <span className="inline-block mt-3 text-[11px] text-[#6E6A63] dark:text-[#96938C]">
             {isPaid ? '30-second frequency' : '5-minute frequency'}
           </span>
         </div>
 
-        <div className="bg-white dark:bg-[#1E1D1A] p-5 rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#1C1C1B] p-5 rounded-2xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Plan Options</span>
+            <span className="text-xs font-medium text-[#6E6A63] dark:text-[#96938C]">Plan Options</span>
             {!isPaid && (
               <button
                 onClick={() => onNavigate('billing')}
-                className="text-xs text-[#C25E3E] hover:underline font-semibold flex items-center gap-0.5"
+                className="text-xs text-[#1E5E4B] dark:text-[#2E8B6E] hover:underline font-semibold flex items-center gap-0.5"
               >
                 <span>Upgrade</span>
                 <ArrowUpRight className="h-3 w-3" />
@@ -188,7 +188,7 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
             placeholder="Search by name or URL..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-white dark:bg-[#1E1D1A] border border-[#E5E0D5] dark:border-[#33312B] rounded-xl text-xs text-[#1F1E1B] dark:text-[#F0ECE1] placeholder-[#A8A49C] focus:outline-none focus:border-[#C25E3E] transition-colors"
+            className="w-full pl-9 pr-4 py-2 bg-white dark:bg-[#1C1C1B] border border-[#E6E3DA] dark:border-[#2E2D29] rounded-xl text-xs text-[#1A1917] dark:text-[#F2EFE9] placeholder-[#96938C] focus:outline-none focus:border-[#1E5E4B] dark:focus:border-[#2E8B6E] transition-colors"
           />
         </div>
       </div>
@@ -203,19 +203,19 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
 
       {/* Monitor Cards List */}
       {loading && monitors.length === 0 ? (
-        <div className="p-16 text-center bg-white dark:bg-[#1E1D1A] rounded-2xl border border-[#E5E0D5] dark:border-[#33312B]">
+        <div className="p-16 text-center bg-white dark:bg-[#1C1C1B] rounded-2xl border border-[#E6E3DA] dark:border-[#2E2D29]">
           <RefreshCw className="h-6 w-6 text-[#8C887F] animate-spin mx-auto mb-3" />
-          <p className="text-xs text-[#6B6861] dark:text-[#9E9B93]">Loading monitors...</p>
+          <p className="text-xs text-[#6E6A63] dark:text-[#96938C]">Loading monitors...</p>
         </div>
       ) : filteredMonitors.length === 0 ? (
-        <div className="p-16 text-center bg-white dark:bg-[#1E1D1A] rounded-3xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft">
-          <div className="h-12 w-12 rounded-full bg-[#FAF8F5] dark:bg-[#252420] border border-[#E5E0D5] dark:border-[#33312B] flex items-center justify-center text-[#C25E3E] mx-auto mb-3">
+        <div className="p-16 text-center bg-white dark:bg-[#1C1C1B] rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft">
+          <div className="h-12 w-12 rounded-xl bg-[#F8F7F2] dark:bg-[#242422] border border-[#E6E3DA] dark:border-[#2E2D29] flex items-center justify-center text-[#1E5E4B] dark:text-[#2E8B6E] mx-auto mb-3">
             <Activity className="h-6 w-6" />
           </div>
-          <h3 className="font-serif text-lg font-normal text-[#1F1E1B] dark:text-[#F0ECE1]">
+          <h3 className="font-serif text-lg font-normal text-[#1A1917] dark:text-[#F2EFE9]">
             No monitors found
           </h3>
-          <p className="text-xs text-[#6B6861] dark:text-[#9E9B93] mt-1 max-w-sm mx-auto">
+          <p className="text-xs text-[#6E6A63] dark:text-[#96938C] mt-1 max-w-sm mx-auto">
             {search ? 'No endpoints match your query.' : 'Configure your first API endpoint to start background monitoring.'}
           </p>
           {!search && (
@@ -224,7 +224,7 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
                 setEditingMonitor(null);
                 setIsModalOpen(true);
               }}
-              className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1F1E1B] hover:bg-black text-white dark:bg-[#F0ECE1] dark:text-[#151413] dark:hover:bg-white text-xs font-semibold shadow-xs transition-all"
+              className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1A1917] hover:bg-black text-white dark:bg-[#F2EFE9] dark:text-[#141413] dark:hover:bg-white text-xs font-semibold shadow-xs transition-all"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>Add Your First Monitor</span>
@@ -232,32 +232,32 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
           )}
         </div>
       ) : (
-        <div className="bg-white dark:bg-[#1E1D1A] rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft overflow-hidden">
-          <div className="divide-y divide-[#EAE6DC] dark:divide-[#2C2A25]">
+        <div className="bg-white dark:bg-[#1C1C1B] rounded-2xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft overflow-hidden">
+          <div className="divide-y divide-[#ECE9E1] dark:divide-[#2A2926]">
             {filteredMonitors.map((mon) => (
               <div
                 key={mon.id}
                 onClick={() => onSelectMonitor(mon.id)}
-                className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#FAF8F5] dark:hover:bg-[#23221E] transition-colors cursor-pointer group"
+                className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#F8F7F2] dark:hover:bg-[#222220] transition-colors cursor-pointer group"
               >
                 {/* Left metadata */}
                 <div className="flex items-start gap-3.5">
-                  <div className="h-9 w-9 rounded-xl bg-[#FAF8F5] dark:bg-[#252420] border border-[#E5E0D5] dark:border-[#33312B] flex items-center justify-center text-[#6B6861] dark:text-[#9E9B93] group-hover:text-[#C25E3E] transition-colors shrink-0 mt-0.5 sm:mt-0">
+                  <div className="h-9 w-9 rounded-xl bg-[#F8F7F2] dark:bg-[#242422] border border-[#E6E3DA] dark:border-[#2E2D29] flex items-center justify-center text-[#6E6A63] dark:text-[#96938C] group-hover:text-[#1E5E4B] dark:group-hover:text-[#2E8B6E] transition-colors shrink-0 mt-0.5 sm:mt-0">
                     <Activity className="h-4 w-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2.5">
-                      <h4 className="text-sm font-semibold text-[#1F1E1B] dark:text-[#F0ECE1] group-hover:text-[#C25E3E] transition-colors">
+                      <h4 className="text-sm font-semibold text-[#1A1917] dark:text-[#F2EFE9] group-hover:text-[#1E5E4B] dark:group-hover:text-[#2E8B6E] transition-colors">
                         {mon.name}
                       </h4>
                       <StatusBadge status={mon.is_active ? 'online' : 'inactive'} size="sm" />
                     </div>
-                    <div className="flex items-center gap-2.5 mt-1 text-xs text-[#6B6861] dark:text-[#9E9B93]">
+                    <div className="flex items-center gap-2.5 mt-1 text-xs text-[#6E6A63] dark:text-[#96938C]">
                       <span className="font-mono text-[11px] text-[#8C887F] truncate max-w-[200px] sm:max-w-xs">
                         {mon.url}
                       </span>
                       <span>&bull;</span>
-                      <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#FAF8F5] dark:bg-[#252420] border border-[#E5E0D5] dark:border-[#33312B]">
+                      <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#F8F7F2] dark:bg-[#242422] border border-[#E6E3DA] dark:border-[#2E2D29]">
                         {mon.method}
                       </span>
                       <span>&bull;</span>
@@ -273,7 +273,7 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
                 <div className="flex items-center gap-1.5 self-end sm:self-center">
                   <button
                     onClick={(e) => copyPublicLink(mon.id, e)}
-                    className="p-2 rounded-lg text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-white hover:bg-[#F3EFE6] dark:hover:bg-[#2A2925] transition-colors"
+                    className="p-2 rounded-lg text-[#6E6A63] dark:text-[#96938C] hover:text-[#1A1917] dark:hover:text-white hover:bg-[#F5F4EE] dark:hover:bg-[#2A2925] transition-colors"
                     title="Copy Public Link"
                   >
                     {copiedId === mon.id ? (
@@ -289,7 +289,7 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
                       setEditingMonitor(mon);
                       setIsModalOpen(true);
                     }}
-                    className="p-2 rounded-lg text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B] dark:hover:text-white hover:bg-[#F3EFE6] dark:hover:bg-[#2A2925] transition-colors"
+                    className="p-2 rounded-lg text-[#6E6A63] dark:text-[#96938C] hover:text-[#1A1917] dark:hover:text-white hover:bg-[#F5F4EE] dark:hover:bg-[#2A2925] transition-colors"
                     title="Edit"
                   >
                     <Edit2 className="h-3.5 w-3.5" />
@@ -297,14 +297,14 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
 
                   <button
                     onClick={(e) => handleDelete(mon.id, e)}
-                    className="p-2 rounded-lg text-[#6B6861] dark:text-[#9E9B93] hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+                    className="p-2 rounded-lg text-[#6E6A63] dark:text-[#96938C] hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
                     title="Delete"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
 
-                  <div className="pl-2 border-l border-[#E5E0D5] dark:border-[#33312B]">
-                    <span className="text-xs text-[#8C887F] group-hover:text-[#1F1E1B] dark:group-hover:text-white transition-colors flex items-center gap-0.5 font-medium">
+                  <div className="pl-2 border-l border-[#E6E3DA] dark:border-[#2E2D29]">
+                    <span className="text-xs text-[#8C887F] group-hover:text-[#1A1917] dark:group-hover:text-white transition-colors flex items-center gap-0.5 font-medium">
                       <span>View</span>
                       <ArrowUpRight className="h-3.5 w-3.5" />
                     </span>
