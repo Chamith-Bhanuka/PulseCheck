@@ -16,7 +16,7 @@ pipeline {
             steps {
                 echo 'Running Go tests in isolated environment...'
                 sh """
-                    docker run --rm -v "${WORKSPACE}/backend":/app -w /app golang:1.24-alpine sh -c "go test -v ./..."
+                    docker run --rm -v "${WORKSPACE}/backend":/app -w /app golang:alpine sh -c "go test -v ./..."
                 """
             }
         }
