@@ -16,6 +16,7 @@ type Repository interface {
 	Create(ctx context.Context, user *User) error
 	GetByEmail(ctx context.Context, email string) (*User, error)
 	GetByID(ctx context.Context, id string) (*User, error)
+	GetByStripeCustomerID(ctx context.Context, customerID string) (*User, error)
 	UpdatePlan(ctx context.Context, id, plan string, customerID, subID *string) error
 }
 
@@ -111,6 +112,35 @@ func (r *postgresRepository) GetByID(ctx context.Context, id string) (*User, err
 			return nil, ErrUserNotFound
 		}
 		return nil, fmt.Errorf("failed to fetch user by id: %w", err)
+	}
+
+	return &u, nil
+}
+
+func (r *postgresRepository) GetByStripeCustomerID(ctx context.Context, customerID string) (*User, error) {
+	query := `
+		SELECT id, email, password_hash, plan, stripe_customer_id, stripe_subscription_id, created_at, updated_at
+		FROM users
+		WHERE stripe_customer_id = $1
+	`
+
+	var u User
+	err := r.db.QueryRowContext(ctx, query, customerID).Scan(
+		&u.ID,
+		&u.Email,
+		&u.PasswordHash,
+		&u.Plan,
+		&u.StripeCustomerID,
+		&u.StripeSubscriptionID,
+		&u.CreatedAt,
+		&u.UpdatedAt,
+	)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrUserNotFound
+		}
+		return nil, fmt.Errorf("failed to fetch user by stripe customer id: %w", err)
 	}
 
 	return &u, nil

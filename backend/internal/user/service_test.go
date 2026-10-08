@@ -41,6 +41,15 @@ func (m *mockUserRepo) GetByID(ctx context.Context, id string) (*User, error) {
 	return u, nil
 }
 
+func (m *mockUserRepo) GetByStripeCustomerID(ctx context.Context, customerID string) (*User, error) {
+	for _, u := range m.users {
+		if u.StripeCustomerID != nil && *u.StripeCustomerID == customerID {
+			return u, nil
+		}
+	}
+	return nil, ErrUserNotFound
+}
+
 func (m *mockUserRepo) UpdatePlan(ctx context.Context, id, plan string, customerID, subID *string) error {
 	u, ok := m.users[id]
 	if !ok {
