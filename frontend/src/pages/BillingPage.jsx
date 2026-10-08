@@ -40,12 +40,12 @@ export default function BillingPage({ onNavigate }) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center max-w-2xl mx-auto mb-14">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
         <span className="text-xs font-bold text-[#1E5E4B] dark:text-[#2E8B6E] uppercase tracking-widest">
           Subscription Tiers
         </span>
-        <h1 className="font-serif text-3xl sm:text-4xl font-normal text-[#1A1917] dark:text-[#F2EFE9] mt-2">
+        <h1 className="font-serif text-2xl xs:text-3xl sm:text-4xl font-normal text-[#1A1917] dark:text-[#F2EFE9] mt-2">
           Simple, Transparent Plans
         </h1>
         <p className="text-[#6E6A63] dark:text-[#96938C] text-xs sm:text-sm mt-2">
@@ -69,7 +69,7 @@ export default function BillingPage({ onNavigate }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
         {/* Free Card */}
-        <div className={`p-8 rounded-3xl border flex flex-col justify-between transition-all ${
+        <div className={`p-6 sm:p-8 rounded-3xl border flex flex-col justify-between transition-all ${
           !isPaid 
             ? 'bg-white dark:bg-[#1C1C1B] border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft' 
             : 'bg-[#F8F7F2] dark:bg-[#181817] border-[#E6E3DA] dark:border-[#2E2D29] opacity-75'
@@ -118,13 +118,14 @@ export default function BillingPage({ onNavigate }) {
         </div>
 
         {/* Pro Card */}
-        <div className={`p-8 rounded-3xl border relative flex flex-col justify-between shadow-soft transition-all ${
+        <div className={`p-6 sm:p-8 rounded-3xl border relative flex flex-col justify-between shadow-soft transition-all ${
           isPaid 
             ? 'bg-[#F8F7F2] dark:bg-[#20201E] border-[#DED9CC] dark:border-[#383733]' 
             : 'bg-white dark:bg-[#1C1C1B] border-[#DED9CC] dark:border-[#383733]'
         }`}>
-          <div className="absolute -top-3 right-6 bg-[#B85D36] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            Production
+          <div className="absolute top-0 -translate-y-1/2 right-6 bg-[#E8F3EE] dark:bg-[#182B24] border border-[#1E5E4B]/20 dark:border-[#2E8B6E]/25 text-[#1E5E4B] dark:text-[#2E8B6E] text-[10px] font-bold px-3 py-0.5 rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#1E5E4B] dark:bg-[#2E8B6E] animate-pulse" />
+            <span>Popular</span>
           </div>
 
           <div>

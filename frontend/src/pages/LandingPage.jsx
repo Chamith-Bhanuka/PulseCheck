@@ -92,31 +92,31 @@ export default function LandingPage({ onNavigate }) {
   return (
     <div className="min-h-screen bg-[#FBFBF9] dark:bg-[#141413] text-[#1A1917] dark:text-[#F2EFE9] transition-colors">
       {/* 1. Hero Section - Tailored Infrastructure & Telemetry Layout */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-14 sm:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-10 items-center">
           
           {/* Left Column: Direct Value Headline & Modern SaaS Email CTA */}
           <div className="lg:col-span-6 flex flex-col items-start text-left max-w-xl">
             {/* Live Indicator Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1E5E4B]/10 dark:bg-[#2E8B6E]/15 border border-[#1E5E4B]/20 dark:border-[#2E8B6E]/25 text-xs font-medium text-[#1E5E4B] dark:text-[#2E8B6E] mb-6 shadow-xs">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1E5E4B]/10 dark:bg-[#2E8B6E]/15 border border-[#1E5E4B]/20 dark:border-[#2E8B6E]/25 text-xs font-medium text-[#1E5E4B] dark:text-[#2E8B6E] mb-5 sm:mb-6 shadow-xs">
               <span className="h-2 w-2 rounded-full bg-[#1E5E4B] dark:bg-[#2E8B6E] animate-pulse" />
               <span>Continuous Uptime Engine &bull; Go Worker Pool</span>
             </div>
 
-            <h1 className="font-serif text-5xl sm:text-6xl lg:text-[62px] leading-[1.08] font-normal tracking-tight text-[#1A1917] dark:text-[#F2EFE9]">
+            <h1 className="font-serif text-3xl xs:text-4xl sm:text-5xl lg:text-[62px] leading-[1.12] sm:leading-[1.08] font-normal tracking-tight text-[#1A1917] dark:text-[#F2EFE9]">
               Catch API downtime <br />
               before your users notice
             </h1>
             
-            <p className="mt-5 text-base sm:text-lg text-[#6E6A63] dark:text-[#96938C] font-normal leading-relaxed">
+            <p className="mt-4 sm:mt-5 text-sm sm:text-base lg:text-lg text-[#6E6A63] dark:text-[#96938C] font-normal leading-relaxed">
               Detect service interruptions in 30 seconds. Powered by high-concurrency Go goroutines, multi-region latency telemetry, and instant email alerting.
             </p>
 
             {/* Modern SaaS Email CTA Box */}
-            <div className="mt-8 w-full">
+            <div className="mt-6 sm:mt-8 w-full">
               <form 
                 onSubmit={handleStartFree}
-                className="flex flex-col sm:flex-row items-stretch gap-2.5 p-2 bg-white dark:bg-[#1C1C1B] border border-[#E6E3DA] dark:border-[#2E2D29] rounded-2xl shadow-soft"
+                className="flex flex-col sm:flex-row items-stretch gap-2.5 p-1.5 sm:p-2 bg-white dark:bg-[#1C1C1B] border border-[#E6E3DA] dark:border-[#2E2D29] rounded-2xl shadow-soft"
               >
                 <div className="relative flex-1">
                   <input
@@ -124,13 +124,13 @@ export default function LandingPage({ onNavigate }) {
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
                     placeholder="Enter your work email..."
-                    className="w-full px-4 py-3 bg-transparent text-sm text-[#1A1917] dark:text-[#F2EFE9] placeholder-[#96938C] focus:outline-none"
+                    className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 bg-transparent text-sm text-[#1A1917] dark:text-[#F2EFE9] placeholder-[#96938C] focus:outline-none"
                     required
                   />
                 </div>
                 <button
                   type="submit"
-                  className="px-6 py-3 rounded-xl bg-[#1A1917] hover:bg-black dark:bg-[#F2EFE9] dark:hover:bg-white text-white dark:text-[#141413] text-sm font-semibold transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-xs"
+                  className="w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-[#1A1917] hover:bg-black dark:bg-[#F2EFE9] dark:hover:bg-white text-white dark:text-[#141413] text-sm font-semibold transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-xs"
                 >
                   <span>Start Monitoring Free</span>
                   <ArrowRight className="h-4 w-4" />
@@ -138,24 +138,24 @@ export default function LandingPage({ onNavigate }) {
               </form>
 
               {/* Trust Badges */}
-              <div className="mt-4 flex flex-wrap items-center gap-y-2 gap-x-5 text-xs text-[#6E6A63] dark:text-[#96938C]">
+              <div className="mt-3.5 sm:mt-4 flex flex-wrap items-center gap-y-2 gap-x-4 sm:gap-x-5 text-xs text-[#6E6A63] dark:text-[#96938C]">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
                   <span>No credit card required</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
                   <span>5 free monitors</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
                   <span>30-second check intervals</span>
                 </span>
               </div>
             </div>
 
             {/* Direct sign in link */}
-            <div className="mt-6 flex items-center gap-2 text-xs text-[#6E6A63] dark:text-[#96938C]">
+            <div className="mt-5 sm:mt-6 flex items-center gap-2 text-xs text-[#6E6A63] dark:text-[#96938C]">
               <span>Already registered?</span>
               <button
                 onClick={() => onNavigate('login')}
@@ -169,31 +169,33 @@ export default function LandingPage({ onNavigate }) {
 
           {/* Right Column: Architectural Grid Canvas with Dedicated Live Telemetry Console */}
           <div className="lg:col-span-6 w-full">
-            <div className="hero-grid-canvas rounded-3xl p-6 sm:p-8 border border-[#E6E3DA] dark:border-[#2E2D29] flex flex-col items-center justify-center min-h-[490px] shadow-sm relative overflow-hidden">
+            <div className="hero-grid-canvas rounded-2xl sm:rounded-3xl p-3 sm:p-6 lg:p-8 border border-[#E6E3DA] dark:border-[#2E2D29] flex flex-col items-center justify-center min-h-auto sm:min-h-[490px] shadow-sm relative overflow-hidden">
               
               {/* Elevated Window Mockup */}
               <div className="w-full max-w-lg bg-white dark:bg-[#1C1C1B] rounded-2xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-window overflow-hidden transition-transform duration-300 hover:scale-[1.01] relative select-none">
                 
                 {/* Window Title Bar with Traffic Light Controls */}
-                <div className="flex items-center justify-between px-4 py-3 bg-[#F8F7F2] dark:bg-[#181817] border-b border-[#E8E5DD] dark:border-[#2A2926]">
-                  <div className="flex items-center gap-2">
-                    <div className="h-2.5 w-2.5 rounded-full bg-[#E57373]" />
-                    <div className="h-2.5 w-2.5 rounded-full bg-[#FFB74D]" />
-                    <div className="h-2.5 w-2.5 rounded-full bg-[#81C784]" />
-                    <span className="text-[11px] font-mono text-[#8C887F] ml-2">telemetry.pulsecheck.dev &bull; Go Engine</span>
+                <div className="flex items-center justify-between px-3.5 sm:px-4 py-2.5 sm:py-3 bg-[#F8F7F2] dark:bg-[#181817] border-b border-[#E8E5DD] dark:border-[#2A2926]">
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <div className="h-2.5 w-2.5 rounded-full bg-[#E57373] shrink-0" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-[#FFB74D] shrink-0" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-[#81C784] shrink-0" />
+                    <span className="text-[10px] sm:text-[11px] font-mono text-[#8C887F] ml-1 sm:ml-2 truncate">
+                      telemetry.pulsecheck.dev<span className="hidden sm:inline"> &bull; Go Engine</span>
+                    </span>
                   </div>
-                  <span className="text-[10px] font-mono text-[#1E5E4B] dark:text-[#2E8B6E] bg-[#E8F3EE] dark:bg-[#182B24] px-2.5 py-0.5 rounded-full font-semibold flex items-center gap-1">
+                  <span className="text-[9px] sm:text-[10px] font-mono text-[#1E5E4B] dark:text-[#2E8B6E] bg-[#E8F3EE] dark:bg-[#182B24] px-2 py-0.5 sm:px-2.5 rounded-full font-semibold flex items-center gap-1 shrink-0">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#1E5E4B] dark:bg-[#2E8B6E] animate-pulse" />
                     Live Checks (30s)
                   </span>
                 </div>
 
                 {/* Telemetry Window Grid */}
-                <div className="grid grid-cols-12 min-h-[300px] relative">
+                <div className="flex flex-col sm:grid sm:grid-cols-12 min-h-auto sm:min-h-[300px] relative">
                   
                   {/* Simulated Gliding Cursor */}
                   <div 
-                    className="absolute z-30 pointer-events-none transition-all duration-1000 ease-in-out"
+                    className="hidden sm:block absolute z-30 pointer-events-none transition-all duration-1000 ease-in-out"
                     style={{ top: `${cursorPos.y}%`, left: `${cursorPos.x}%` }}
                   >
                     <svg className="w-5 h-5 drop-shadow-md text-[#1A1917]" viewBox="0 0 24 24" fill="currentColor">
@@ -202,18 +204,18 @@ export default function LandingPage({ onNavigate }) {
                   </div>
 
                   {/* Left Sidebar: Monitored Endpoints */}
-                  <div className="col-span-4 bg-[#F5F4EE] dark:bg-[#171716] p-3 border-r border-[#E8E5DD] dark:border-[#2A2926] text-left">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#8C887F] block mb-2 px-1">
+                  <div className="sm:col-span-4 bg-[#F5F4EE] dark:bg-[#171716] p-2.5 sm:p-3 border-b sm:border-b-0 sm:border-r border-[#E8E5DD] dark:border-[#2A2926] text-left">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#8C887F] block mb-1.5 sm:mb-2 px-1">
                       Monitored
                     </span>
-                    <div className="space-y-1">
+                    <div className="flex sm:flex-col gap-1.5 overflow-x-auto sm:overflow-visible pb-1 sm:pb-0">
                       {Object.entries(endpointDetails).map(([key, item]) => {
                         const isSelected = selectedHeroEndpoint === key;
                         return (
                           <button
                             key={key}
                             onClick={() => setSelectedHeroEndpoint(key)}
-                            className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center justify-between ${
+                            className={`whitespace-nowrap sm:whitespace-normal w-auto sm:w-full text-left px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center justify-between gap-2 shrink-0 sm:shrink ${
                               isSelected
                                 ? 'bg-white dark:bg-[#242422] text-[#1A1917] dark:text-white shadow-xs font-semibold'
                                 : 'text-[#6E6A63] dark:text-[#96938C] hover:bg-white/60 dark:hover:bg-[#242422]/60'
@@ -223,13 +225,13 @@ export default function LandingPage({ onNavigate }) {
                               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
                               <span className="truncate">{item.name}</span>
                             </div>
-                            <span className="text-[10px] font-mono text-[#8C887F]">{item.latency}ms</span>
+                            <span className="text-[10px] font-mono text-[#8C887F] shrink-0">{item.latency}ms</span>
                           </button>
                         );
                       })}
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-[#E8E5DD] dark:border-[#2A2926] px-1">
+                    <div className="hidden sm:block mt-4 pt-3 border-t border-[#E8E5DD] dark:border-[#2A2926] px-1">
                       <span className="text-[10px] uppercase font-semibold text-[#8C887F] block mb-1">
                         Edge Nodes
                       </span>
@@ -247,14 +249,14 @@ export default function LandingPage({ onNavigate }) {
                   </div>
 
                   {/* Right Main Pane: Active Endpoint Inspector */}
-                  <div className="col-span-8 p-4 text-left flex flex-col justify-between bg-white dark:bg-[#1C1C1B]">
+                  <div className="sm:col-span-8 p-3.5 sm:p-4 text-left flex flex-col justify-between bg-white dark:bg-[#1C1C1B]">
                     <div>
                       {/* Active Endpoint Header */}
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="text-xs font-semibold text-[#1A1917] dark:text-[#F2EFE9] truncate max-w-[170px]">
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <div className="text-xs font-semibold text-[#1A1917] dark:text-[#F2EFE9] truncate max-w-[140px] xs:max-w-[200px] sm:max-w-[170px]">
                           {currentEndpoint.url}
                         </div>
-                        <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded shrink-0">
                           HTTP {currentEndpoint.status} OK
                         </span>
                       </div>
@@ -262,9 +264,9 @@ export default function LandingPage({ onNavigate }) {
                       {/* Real-time Latency Logs */}
                       <div className="space-y-1.5 mt-2 font-mono text-[11px]">
                         {currentEndpoint.logs.map((log, idx) => (
-                          <div key={idx} className="p-2 rounded-lg bg-[#F8F7F2] dark:bg-[#151514] border border-[#ECE9E1] dark:border-[#2A2926] flex items-center justify-between">
-                            <span className="text-[#6E6A63] dark:text-[#96938C] truncate max-w-[140px]">{log.name}</span>
-                            <span className="font-semibold text-emerald-600 dark:text-emerald-400">{log.latency}</span>
+                          <div key={idx} className="p-2 rounded-lg bg-[#F8F7F2] dark:bg-[#151514] border border-[#ECE9E1] dark:border-[#2A2926] flex items-center justify-between gap-2">
+                            <span className="text-[#6E6A63] dark:text-[#96938C] truncate max-w-[120px] xs:max-w-[170px] sm:max-w-[140px]">{log.name}</span>
+                            <span className="font-semibold text-emerald-600 dark:text-emerald-400 shrink-0">{log.latency}</span>
                           </div>
                         ))}
                       </div>
@@ -286,7 +288,7 @@ export default function LandingPage({ onNavigate }) {
                     </div>
 
                     {/* Window Bottom Status Bar */}
-                    <div className="pt-3 border-t border-[#ECE9E1] dark:border-[#2A2926] flex items-center justify-between text-[11px] text-[#8C887F] font-mono">
+                    <div className="pt-3 border-t border-[#ECE9E1] dark:border-[#2A2926] flex items-center justify-between text-[11px] text-[#8C887F] font-mono mt-3 sm:mt-0">
                       <span>Worker Pool: 20 Slots</span>
                       <span className="font-semibold text-emerald-600 dark:text-emerald-400">{currentEndpoint.uptime} Uptime</span>
                     </div>
@@ -301,12 +303,12 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* 2. Core Pillars - Warm Editorial Engineering Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-[#E6E3DA] dark:border-[#2E2D29]">
-        <div className="max-w-2xl text-left mb-14">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 border-t border-[#E6E3DA] dark:border-[#2E2D29]">
+        <div className="max-w-2xl text-left mb-10 sm:mb-14">
           <span className="text-xs font-bold text-[#1E5E4B] dark:text-[#2E8B6E] uppercase tracking-widest block mb-2">
             Engineered for Reliability
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-normal text-[#1A1917] dark:text-[#F2EFE9]">
+          <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl font-normal text-[#1A1917] dark:text-[#F2EFE9]">
             Clean architecture without the noise
           </h2>
           <p className="mt-3 text-sm sm:text-base text-[#6E6A63] dark:text-[#96938C]">
@@ -315,7 +317,7 @@ export default function LandingPage({ onNavigate }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white dark:bg-[#1C1C1B] p-7 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] text-left shadow-soft">
+          <div className="bg-white dark:bg-[#1C1C1B] p-6 sm:p-7 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] text-left shadow-soft">
             <div className="h-10 w-10 rounded-xl bg-[#F8F7F2] dark:bg-[#242422] border border-[#E6E3DA] dark:border-[#2E2D29] flex items-center justify-center text-[#1E5E4B] dark:text-[#2E8B6E] mb-5">
               <Zap className="h-5 w-5" />
             </div>
@@ -327,7 +329,7 @@ export default function LandingPage({ onNavigate }) {
             </p>
           </div>
 
-          <div className="bg-white dark:bg-[#1C1C1B] p-7 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] text-left shadow-soft">
+          <div className="bg-white dark:bg-[#1C1C1B] p-6 sm:p-7 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] text-left shadow-soft">
             <div className="h-10 w-10 rounded-xl bg-[#F8F7F2] dark:bg-[#242422] border border-[#E6E3DA] dark:border-[#2E2D29] flex items-center justify-center text-[#1E5E4B] dark:text-[#2E8B6E] mb-5">
               <BarChart3 className="h-5 w-5" />
             </div>
@@ -339,7 +341,7 @@ export default function LandingPage({ onNavigate }) {
             </p>
           </div>
 
-          <div className="bg-white dark:bg-[#1C1C1B] p-7 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] text-left shadow-soft">
+          <div className="bg-white dark:bg-[#1C1C1B] p-6 sm:p-7 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] text-left shadow-soft">
             <div className="h-10 w-10 rounded-xl bg-[#F8F7F2] dark:bg-[#242422] border border-[#E6E3DA] dark:border-[#2E2D29] flex items-center justify-center text-[#1E5E4B] dark:text-[#2E8B6E] mb-5">
               <Bell className="h-5 w-5" />
             </div>
@@ -354,19 +356,19 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* 3. Pricing Cards */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-[#E6E3DA] dark:border-[#2E2D29]">
-        <div className="text-center max-w-2xl mx-auto mb-14">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 border-t border-[#E6E3DA] dark:border-[#2E2D29]">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
           <span className="text-xs font-bold text-[#1E5E4B] dark:text-[#2E8B6E] uppercase tracking-widest">
             Straightforward Pricing
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-normal text-[#1A1917] dark:text-[#F2EFE9] mt-2">
+          <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl font-normal text-[#1A1917] dark:text-[#F2EFE9] mt-2">
             Start free, upgrade as you scale
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
           {/* Free Starter */}
-          <div className="bg-white dark:bg-[#1C1C1B] p-8 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] text-left flex flex-col justify-between shadow-soft">
+          <div className="bg-white dark:bg-[#1C1C1B] p-6 sm:p-8 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] text-left flex flex-col justify-between shadow-soft">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-serif text-2xl font-normal text-[#1A1917] dark:text-[#F2EFE9]">Free</h3>
@@ -380,15 +382,15 @@ export default function LandingPage({ onNavigate }) {
               </div>
               <ul className="space-y-3 text-xs sm:text-sm text-[#6E6A63] dark:text-[#96938C]">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
                   <span>5 active monitors</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
                   <span>5-minute ping frequency</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
                   <span>Email downtime notifications</span>
                 </li>
               </ul>
@@ -402,9 +404,10 @@ export default function LandingPage({ onNavigate }) {
           </div>
 
           {/* Pro Subscription */}
-          <div className="bg-[#F8F7F2] dark:bg-[#20201E] p-8 rounded-3xl border border-[#DED9CC] dark:border-[#383733] text-left flex flex-col justify-between shadow-soft relative">
-            <div className="absolute -top-3 right-6 bg-[#B85D36] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-              Popular
+          <div className="bg-[#F8F7F2] dark:bg-[#20201E] p-6 sm:p-8 rounded-3xl border border-[#DED9CC] dark:border-[#383733] text-left flex flex-col justify-between shadow-soft relative">
+            <div className="absolute top-0 -translate-y-1/2 right-6 bg-[#E8F3EE] dark:bg-[#182B24] border border-[#1E5E4B]/20 dark:border-[#2E8B6E]/25 text-[#1E5E4B] dark:text-[#2E8B6E] text-[10px] font-bold px-3 py-0.5 rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#1E5E4B] dark:bg-[#2E8B6E] animate-pulse" />
+              <span>Popular</span>
             </div>
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -419,19 +422,19 @@ export default function LandingPage({ onNavigate }) {
               </div>
               <ul className="space-y-3 text-xs sm:text-sm text-[#1A1917] dark:text-[#F2EFE9]">
                 <li className="flex items-center gap-2 font-medium">
-                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
                   <span>50 active monitors</span>
                 </li>
                 <li className="flex items-center gap-2 font-medium">
-                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
                   <span>High-speed 30-second ping interval</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
                   <span>Priority SMTP alerting</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#1E5E4B] dark:text-[#2E8B6E] shrink-0" />
                   <span>30-day extended telemetry</span>
                 </li>
               </ul>

@@ -90,7 +90,7 @@ export default function PublicStatusPage({ monitorId, onBack }) {
               <h2 className="text-base font-serif font-normal text-[#1A1917] dark:text-[#F2EFE9]">
                 {monitor?.name}
               </h2>
-              <span className="text-xs font-mono text-[#8C887F] mt-0.5 block">
+              <span className="text-xs font-mono text-[#8C887F] mt-0.5 block truncate max-w-[180px] xs:max-w-xs sm:max-w-md">
                 {monitor?.url}
               </span>
             </div>

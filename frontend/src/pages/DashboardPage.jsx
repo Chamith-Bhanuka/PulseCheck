@@ -75,11 +75,11 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
   const activeCount = monitors.filter((m) => m.is_active).length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-serif font-normal text-[#1A1917] dark:text-[#F2EFE9]">
+          <h1 className="text-2xl sm:text-3xl font-serif font-normal text-[#1A1917] dark:text-[#F2EFE9]">
             Monitors
           </h1>
           <p className="text-xs sm:text-sm text-[#6E6A63] dark:text-[#96938C] mt-1">
@@ -111,7 +111,7 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
       </div>
 
       {/* Overview Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         <div className="bg-white dark:bg-[#1C1C1B] p-5 rounded-2xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft">
           <span className="text-xs font-medium text-[#6E6A63] dark:text-[#96938C]">Active Services</span>
           <div className="flex items-baseline gap-2 mt-2">
@@ -148,7 +148,7 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
               {user?.plan || 'Free'}
             </span>
             {isPaid && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#B85D36]/15 text-[#B85D36]">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1E5E4B]/15 text-[#1E5E4B] dark:text-[#2E8B6E]">
                 PRO
               </span>
             )}
@@ -238,22 +238,22 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
               <div
                 key={mon.id}
                 onClick={() => onSelectMonitor(mon.id)}
-                className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#F8F7F2] dark:hover:bg-[#222220] transition-colors cursor-pointer group"
+                className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 hover:bg-[#F8F7F2] dark:hover:bg-[#222220] transition-colors cursor-pointer group"
               >
                 {/* Left metadata */}
-                <div className="flex items-start gap-3.5">
+                <div className="flex items-start gap-3 min-w-0 flex-1">
                   <div className="h-9 w-9 rounded-xl bg-[#F8F7F2] dark:bg-[#242422] border border-[#E6E3DA] dark:border-[#2E2D29] flex items-center justify-center text-[#6E6A63] dark:text-[#96938C] group-hover:text-[#1E5E4B] dark:group-hover:text-[#2E8B6E] transition-colors shrink-0 mt-0.5 sm:mt-0">
                     <Activity className="h-4 w-4" />
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2.5">
-                      <h4 className="text-sm font-semibold text-[#1A1917] dark:text-[#F2EFE9] group-hover:text-[#1E5E4B] dark:group-hover:text-[#2E8B6E] transition-colors">
+                      <h4 className="text-sm font-semibold text-[#1A1917] dark:text-[#F2EFE9] group-hover:text-[#1E5E4B] dark:group-hover:text-[#2E8B6E] transition-colors truncate">
                         {mon.name}
                       </h4>
                       <StatusBadge status={mon.is_active ? 'online' : 'inactive'} size="sm" />
                     </div>
-                    <div className="flex items-center gap-2.5 mt-1 text-xs text-[#6E6A63] dark:text-[#96938C]">
-                      <span className="font-mono text-[11px] text-[#8C887F] truncate max-w-[200px] sm:max-w-xs">
+                    <div className="flex items-center gap-2 mt-1 text-xs text-[#6E6A63] dark:text-[#96938C] flex-wrap">
+                      <span className="font-mono text-[11px] text-[#8C887F] truncate max-w-[170px] xs:max-w-xs sm:max-w-md">
                         {mon.url}
                       </span>
                       <span>&bull;</span>
@@ -270,7 +270,7 @@ export default function DashboardPage({ onSelectMonitor, onNavigate }) {
                 </div>
 
                 {/* Right actions */}
-                <div className="flex items-center gap-1.5 self-end sm:self-center">
+                <div className="flex items-center gap-1.5 self-end sm:self-center shrink-0 pt-2.5 sm:pt-0 border-t border-[#ECE9E1]/60 dark:border-[#2A2926]/60 sm:border-t-0 w-full sm:w-auto justify-end">
                   <button
                     onClick={(e) => copyPublicLink(mon.id, e)}
                     className="p-2 rounded-lg text-[#6E6A63] dark:text-[#96938C] hover:text-[#1A1917] dark:hover:text-white hover:bg-[#F5F4EE] dark:hover:bg-[#2A2925] transition-colors"

@@ -25,8 +25,8 @@ export default function LoginPage({ onNavigate }) {
   };
 
   return (
-    <div className="min-h-[82vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 bg-[#FBFBF9] dark:bg-[#141413]">
-      <div className="w-full max-w-md bg-white dark:bg-[#1C1C1B] p-8 sm:p-10 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft">
+    <div className="min-h-[82vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12 bg-[#FBFBF9] dark:bg-[#141413]">
+      <div className="w-full max-w-md bg-white dark:bg-[#1C1C1B] p-6 sm:p-10 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-soft">
         <div className="text-center mb-8">
           {/* PulseCheck Activity Logo */}
           <div className="inline-flex h-11 w-11 rounded-xl bg-[#1E5E4B]/10 dark:bg-[#2E8B6E]/20 border border-[#1E5E4B]/20 dark:border-[#2E8B6E]/30 items-center justify-center text-[#1E5E4B] dark:text-[#2E8B6E] mb-3 shadow-xs">

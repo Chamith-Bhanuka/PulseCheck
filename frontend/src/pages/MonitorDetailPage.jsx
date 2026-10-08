@@ -119,17 +119,17 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
       ) : (
         <>
           {/* Identity Card */}
-          <div className="bg-white dark:bg-[#1E1D1A] p-6 sm:p-8 rounded-3xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft mb-8">
+          <div className="bg-white dark:bg-[#1E1D1A] p-5 sm:p-6 md:p-8 rounded-3xl border border-[#E5E0D5] dark:border-[#33312B] shadow-soft mb-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E8E4DA] dark:border-[#2C2A25]">
               <div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="text-2xl sm:text-3xl font-serif font-normal text-[#1F1E1B] dark:text-[#F0ECE1]">
                     {monitor?.name}
                   </h1>
                   <StatusBadge status={monitor?.is_active ? 'online' : 'inactive'} />
                 </div>
-                <div className="flex items-center gap-2 mt-2 text-xs text-[#6B6861] dark:text-[#9E9B93] font-mono">
-                  <span>{monitor?.url}</span>
+                <div className="flex items-center gap-2 mt-2 text-xs text-[#6B6861] dark:text-[#9E9B93] font-mono flex-wrap">
+                  <span className="truncate max-w-[180px] xs:max-w-xs sm:max-w-none">{monitor?.url}</span>
                   <span>&bull;</span>
                   <span className="px-2 py-0.5 rounded bg-[#FAF8F5] dark:bg-[#252420] border border-[#E5E0D5] dark:border-[#33312B]">
                     {monitor?.method}
@@ -140,7 +140,7 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
               </div>
 
               {/* Period Tabs */}
-              <div className="flex items-center p-1 rounded-full bg-[#FAF8F5] dark:bg-[#161513] border border-[#E5E0D5] dark:border-[#33312B]">
+              <div className="flex items-center self-start md:self-auto p-1 rounded-full bg-[#FAF8F5] dark:bg-[#161513] border border-[#E5E0D5] dark:border-[#33312B]">
                 {['24h', '7d', '30d'].map((p) => (
                   <button
                     key={p}
@@ -158,7 +158,7 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
             </div>
 
             {/* Metrics Ribbon */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-6">
               <div className="p-4 rounded-2xl bg-[#FAF8F5] dark:bg-[#161513] border border-[#E5E0D5] dark:border-[#33312B]">
                 <span className="text-xs font-medium text-[#6B6861] dark:text-[#9E9B93]">Uptime Ratio</span>
                 <div className="text-2xl font-serif font-normal text-[#1E6B52] dark:text-[#34D399] mt-1">
@@ -262,7 +262,7 @@ export default function MonitorDetailPage({ monitorId, onBack, onNavigatePublic 
             </h3>
             
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[500px]">
                 <thead>
                   <tr className="border-b border-[#E8E4DA] dark:border-[#2C2A25] text-[#8C887F] font-mono uppercase tracking-wider">
                     <th className="pb-3 font-medium">Status</th>

@@ -60,10 +60,10 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-      <div className="w-full max-w-lg bg-white dark:bg-[#1C1C1B] rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-2xl overflow-hidden text-left">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/40 backdrop-blur-xs">
+      <div className="w-full max-w-lg max-h-[92vh] flex flex-col bg-white dark:bg-[#1C1C1B] rounded-2xl sm:rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] shadow-2xl overflow-hidden text-left">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E5DD] dark:border-[#2A2926]">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[#E8E5DD] dark:border-[#2A2926]">
           <div className="flex items-center gap-2.5">
             <div className="h-8 w-8 rounded-xl bg-[#1E5E4B]/10 dark:bg-[#2E8B6E]/20 border border-[#1E5E4B]/20 dark:border-[#2E8B6E]/30 flex items-center justify-center text-[#1E5E4B] dark:text-[#2E8B6E]">
               <Activity className="w-4 h-4 stroke-[2.2]" />
@@ -81,7 +81,7 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 overflow-y-auto">
           {error && (
             <div className="flex items-center gap-2 p-3 text-xs text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 rounded-xl">
               <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" />
@@ -171,7 +171,7 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
               )}
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
               <button
                 type="button"
                 disabled={!isPaid}
@@ -185,7 +185,7 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
                 }`}
               >
                 <div>30 Seconds</div>
-                {!isPaid && <span className="text-[9px] text-[#B85D36] font-bold">PRO</span>}
+                {!isPaid && <span className="text-[9px] text-[#1E5E4B] dark:text-[#2E8B6E] font-bold">PRO</span>}
               </button>
 
               <button
@@ -201,7 +201,7 @@ export default function CreateMonitorModal({ isOpen, onClose, onSubmit, initialD
                 }`}
               >
                 <div>1 Minute</div>
-                {!isPaid && <span className="text-[9px] text-[#B85D36] font-bold">PRO</span>}
+                {!isPaid && <span className="text-[9px] text-[#1E5E4B] dark:text-[#2E8B6E] font-bold">PRO</span>}
               </button>
 
               <button
