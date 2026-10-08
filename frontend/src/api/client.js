@@ -83,7 +83,7 @@ export const api = {
       request(`/api/monitors/${id}/history?period=${period}`),
   },
   publicStatus: {
-    get: (id) => request(`/status/${id}/public`),
+    get: (id) => request(`/api/status/${id}/public`),
     getHistory: (id, period = '24h') =>
       request(`/api/status/${id}/public/history?period=${period}`),
   },

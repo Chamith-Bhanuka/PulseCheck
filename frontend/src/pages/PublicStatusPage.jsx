@@ -46,6 +46,38 @@ export default function PublicStatusPage({ monitorId, onBack }) {
   const uptimePercentage = history?.uptime?.uptime_percentage ?? 100;
   const isHealthy = monitor?.is_active && uptimePercentage >= 99.0;
 
+  if (loading && !monitor) {
+    return (
+      <div className="min-h-screen bg-[#FBFBF9] dark:bg-[#141413] text-[#1A1917] dark:text-[#F2EFE9] flex items-center justify-center p-4">
+        <div className="flex items-center gap-3">
+          <div className="h-5 w-5 border-2 border-[#1E5E4B] dark:border-[#2E8B6E] border-t-transparent rounded-full animate-spin" />
+          <span className="font-serif text-sm text-[#6E6A63] dark:text-[#96938C]">Loading status telemetry...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#FBFBF9] dark:bg-[#141413] text-[#1A1917] dark:text-[#F2EFE9] flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white dark:bg-[#1C1C1B] p-8 rounded-3xl border border-[#E6E3DA] dark:border-[#2E2D29] text-center shadow-soft">
+          <AlertTriangle className="h-10 w-10 text-[#B85D36] mx-auto mb-4" />
+          <h2 className="font-serif text-lg text-[#1A1917] dark:text-[#F2EFE9] mb-2">Status Page Unavailable</h2>
+          <p className="text-xs text-[#6E6A63] dark:text-[#96938C] mb-6">{error}</p>
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#1A1917] dark:bg-white text-white dark:text-[#1A1917] text-xs font-medium hover:opacity-90 transition-opacity"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to PulseCheck</span>
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FBFBF9] dark:bg-[#141413] text-[#1A1917] dark:text-[#F2EFE9] py-12 px-4 sm:px-6 lg:px-8 transition-colors">
       <div className="max-w-3xl mx-auto">
@@ -55,7 +87,7 @@ export default function PublicStatusPage({ monitorId, onBack }) {
             className="inline-flex items-center gap-2 text-xs font-medium text-[#6E6A63] dark:text-[#96938C] hover:text-[#1A1917] dark:hover:text-white transition-colors mb-6"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>Back to Dashboard</span>
+            <span>Back to PulseCheck</span>
           </button>
         )}
 

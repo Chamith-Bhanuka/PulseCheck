@@ -12,13 +12,27 @@ import PublicStatusPage from './pages/PublicStatusPage';
 
 export default function App() {
   const { isAuthenticated, loading } = useAuth();
+
+  const getInitialPublicId = () => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      if (path.startsWith('/status/')) {
+        const parts = path.split('/').filter(Boolean);
+        if (parts.length >= 2) return parts[1];
+      }
+    }
+    return null;
+  };
+
+  const [publicMonitorId, setPublicMonitorId] = useState(getInitialPublicId);
   const [currentView, setCurrentView] = useState(() => {
+    const initPublicId = getInitialPublicId();
+    if (initPublicId) return 'public-status';
     return localStorage.getItem('pulsecheck_view') || 'landing';
   });
   const [selectedMonitorId, setSelectedMonitorId] = useState(() => {
     return localStorage.getItem('pulsecheck_selected_monitor') || null;
   });
-  const [publicMonitorId, setPublicMonitorId] = useState(null);
 
   // Check URL path on initial load (e.g. /status/mon_xyz) and sync view
   useEffect(() => {
@@ -52,7 +66,34 @@ export default function App() {
     }
   }, [isAuthenticated]);
 
+  // Support browser Back/Forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path.startsWith('/status/')) {
+        const parts = path.split('/').filter(Boolean);
+        if (parts.length >= 2) {
+          setPublicMonitorId(parts[1]);
+          setCurrentView('public-status');
+          return;
+        }
+      }
+      if (isAuthenticated) {
+        const savedView = localStorage.getItem('pulsecheck_view') || 'dashboard';
+        setCurrentView(savedView);
+      } else {
+        setCurrentView('landing');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [isAuthenticated]);
+
   const handleNavigate = (view) => {
+    if (window.location.pathname.startsWith('/status/')) {
+      window.history.pushState({}, '', '/');
+    }
     setCurrentView(view);
     localStorage.setItem('pulsecheck_view', view);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -67,12 +108,13 @@ export default function App() {
   };
 
   const handleNavigatePublic = (id) => {
+    window.history.pushState({}, '', `/status/${id}`);
     setPublicMonitorId(id);
     setCurrentView('public-status');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (loading) {
+  if (loading && currentView !== 'public-status') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FBFBF9] dark:bg-[#141413] text-[#1E5E4B] dark:text-[#2E8B6E]">
         <div className="flex items-center gap-3">
@@ -88,7 +130,10 @@ export default function App() {
     return (
       <PublicStatusPage
         monitorId={publicMonitorId}
-        onBack={isAuthenticated ? () => setCurrentView('dashboard') : null}
+        onBack={() => {
+          window.history.pushState({}, '', '/');
+          handleNavigate(isAuthenticated ? 'dashboard' : 'landing');
+        }}
       />
     );
   }
