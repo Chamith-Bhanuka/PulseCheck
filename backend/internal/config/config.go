@@ -37,7 +37,7 @@ func Load() (*Config, error) {
 		ClientOrigin:     getEnv("CLIENT_ORIGIN", "http://localhost:5173"),
 		DatabaseURL:      getEnv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/pulsecheck?sslmode=disable"),
 		JWTSecret:        getEnv("JWT_SECRET", "pulsecheck-development-secret-key-change-in-production"),
-		JWTExpiryMinutes: getEnvAsInt("JWT_EXPIRY_MINUTES", 15),
+		JWTExpiryMinutes: getEnvAsInt("JWT_EXPIRY_MINUTES", 1440),
 
 		StripeSecretKey:     getEnv("STRIPE_SECRET_KEY", ""),
 		StripeWebhookSecret: getEnv("STRIPE_WEBHOOK_SECRET", ""),

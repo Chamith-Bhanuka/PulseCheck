@@ -1,29 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Activity, ShieldCheck, Zap, Bell, ArrowRight, CheckCircle2, 
-  Clock, Globe, Server, BarChart3, Lock, Sparkles, ChevronRight, Terminal, Laptop
+  Clock, Globe, Server, BarChart3, Lock, Sparkles, ChevronRight, Terminal, Laptop, Video
 } from 'lucide-react';
 
 export default function LandingPage({ onNavigate }) {
   const [activeTab, setActiveTab] = useState('api');
-  const [simulatedPings, setSimulatedPings] = useState([
-    { id: 1, name: 'api.pulsecheck.dev', status: 200, latency: 42, time: 'Just now' },
-    { id: 2, name: 'billing.stripe.com', status: 200, latency: 58, time: '30s ago' },
-    { id: 3, name: 'auth-service-us-east', status: 200, latency: 31, time: '1m ago' },
-  ]);
+  const [heroMode, setHeroMode] = useState('live'); // 'live' or 'video'
+  const [selectedHeroEndpoint, setSelectedHeroEndpoint] = useState('production');
+  const [videoError, setVideoError] = useState(false);
+  const [cursorPos, setCursorPos] = useState({ x: 75, y: 40 });
 
-  // Subtle real-time ping simulation inside hero canvas
+  // Natural animated cursor gliding over endpoints to mimic the Claude screencast
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSimulatedPings((prev) => {
-        const nextLatency = Math.floor(30 + Math.random() * 25);
-        const updated = [...prev];
-        updated[0] = { ...updated[0], latency: nextLatency, time: 'Just now' };
-        return updated;
-      });
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+    if (heroMode !== 'live') return;
+    const positions = [
+      { x: 28, y: 35, endpoint: 'production' },
+      { x: 28, y: 55, endpoint: 'stripe' },
+      { x: 28, y: 75, endpoint: 'auth' },
+      { x: 70, y: 40, endpoint: 'production' },
+    ];
+    let idx = 0;
+    const cursorInterval = setInterval(() => {
+      idx = (idx + 1) % positions.length;
+      setCursorPos({ x: positions[idx].x, y: positions[idx].y });
+      if (positions[idx].endpoint) {
+        setSelectedHeroEndpoint(positions[idx].endpoint);
+      }
+    }, 3800);
+    return () => clearInterval(cursorInterval);
+  }, [heroMode]);
+
+  const endpointDetails = {
+    production: {
+      url: 'api.pulsecheck.dev/health',
+      status: 200,
+      latency: 38,
+      uptime: '99.99%',
+      logs: [
+        { name: 'GET /v1/health', latency: '38ms', status: 200 },
+        { name: 'POST /v1/tokens', latency: '44ms', status: 200 },
+        { name: 'GET /v1/monitors', latency: '31ms', status: 200 },
+      ]
+    },
+    stripe: {
+      url: 'billing.stripe.com/v1/charges',
+      status: 200,
+      latency: 62,
+      uptime: '99.95%',
+      logs: [
+        { name: 'POST /v1/charges', latency: '62ms', status: 200 },
+        { name: 'GET /v1/invoices', latency: '54ms', status: 200 },
+        { name: 'GET /v1/customers', latency: '58ms', status: 200 },
+      ]
+    },
+    auth: {
+      url: 'auth-gateway.internal/verify',
+      status: 200,
+      latency: 24,
+      uptime: '100.00%',
+      logs: [
+        { name: 'POST /jwt/verify', latency: '24ms', status: 200 },
+        { name: 'POST /session/refresh', latency: '28ms', status: 200 },
+        { name: 'GET /jwks.json', latency: '19ms', status: 200 },
+      ]
+    }
+  };
+
+  const currentEndpoint = endpointDetails[selectedHeroEndpoint] || endpointDetails.production;
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#151413] text-[#1F1E1B] dark:text-[#F0ECE1] transition-colors">
@@ -89,24 +133,38 @@ export default function LandingPage({ onNavigate }) {
             </div>
           </div>
 
-          {/* Right Column: Architectural Grid Canvas with Interactive Telemetry Window */}
+          {/* Right Column: Architectural Grid Canvas with Interactive Telemetry / Video Window */}
           <div className="lg:col-span-6 w-full">
-            <div className="hero-grid-canvas rounded-3xl p-6 sm:p-10 border border-[#E5E0D5] dark:border-[#33312B] flex items-center justify-center min-h-[460px] shadow-sm relative overflow-hidden">
+            <div className="hero-grid-canvas rounded-3xl p-6 sm:p-8 border border-[#E5E0D5] dark:border-[#33312B] flex flex-col items-center justify-center min-h-[480px] shadow-sm relative overflow-hidden">
               
-              {/* Optional Video Asset Layer: If video exists at /assets/hero-video.mp4, plays cleanly */}
-              <video 
-                className="hidden absolute inset-0 w-full h-full object-cover rounded-3xl"
-                autoPlay 
-                loop 
-                muted 
-                playsInline
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
-              >
-                <source src="/assets/hero-video.mp4" type="video/mp4" />
-              </video>
+              {/* Mode Switcher Pill */}
+              <div className="self-end mb-4 bg-white/90 dark:bg-[#1E1D1A]/90 backdrop-blur border border-[#E5E0D5] dark:border-[#33312B] rounded-full p-1 flex items-center gap-1 shadow-xs z-20">
+                <button
+                  onClick={() => setHeroMode('live')}
+                  className={`px-3 py-1 text-xs font-medium rounded-full transition-all flex items-center gap-1.5 ${
+                    heroMode === 'live'
+                      ? 'bg-[#1F1E1B] text-white dark:bg-[#F0ECE1] dark:text-[#151413]'
+                      : 'text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B]'
+                  }`}
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Live Telemetry</span>
+                </button>
+                <button
+                  onClick={() => setHeroMode('video')}
+                  className={`px-3 py-1 text-xs font-medium rounded-full transition-all flex items-center gap-1.5 ${
+                    heroMode === 'video'
+                      ? 'bg-[#1F1E1B] text-white dark:bg-[#F0ECE1] dark:text-[#151413]'
+                      : 'text-[#6B6861] dark:text-[#9E9B93] hover:text-[#1F1E1B]'
+                  }`}
+                >
+                  <Video className="h-3 w-3" />
+                  <span>Product Video</span>
+                </button>
+              </div>
 
               {/* Floating Elevated Window Mockup (matching the Claude macOS window mockup) */}
-              <div className="w-full max-w-lg bg-white dark:bg-[#1E1D1A] rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-window overflow-hidden transition-transform duration-300 hover:scale-[1.01]">
+              <div className="w-full max-w-lg bg-white dark:bg-[#1E1D1A] rounded-2xl border border-[#E5E0D5] dark:border-[#33312B] shadow-window overflow-hidden transition-transform duration-300 hover:scale-[1.01] relative">
                 
                 {/* Window Title Bar with Traffic Light Controls */}
                 <div className="flex items-center justify-between px-4 py-3 bg-[#FAF8F5] dark:bg-[#181715] border-b border-[#E8E4DA] dark:border-[#2C2A25]">
@@ -117,63 +175,136 @@ export default function LandingPage({ onNavigate }) {
                     <span className="text-[11px] font-mono text-[#8C887F] ml-2">PulseCheck Telemetry &bull; Go Engine</span>
                   </div>
                   <span className="text-[10px] font-mono text-[#1E6B52] dark:text-[#34D399] bg-[#E8F5E9] dark:bg-[#1C2C24] px-2 py-0.5 rounded-full font-semibold">
-                    Live Pings
+                    {heroMode === 'live' ? 'Live Pings (30s)' : '4K Demo Video'}
                   </span>
                 </div>
 
-                {/* Window Content Split */}
-                <div className="grid grid-cols-12 min-h-[260px]">
-                  {/* Left Sidebar (Like Finder sidebar in Claude image) */}
-                  <div className="col-span-4 bg-[#F7F4EC] dark:bg-[#181714] p-3 border-r border-[#E8E4DA] dark:border-[#2C2A25] text-left">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#8C887F] block mb-2 px-1">
-                      Monitored
-                    </span>
-                    <div className="space-y-1">
-                      <div className="px-2 py-1.5 rounded-lg bg-white dark:bg-[#252420] text-xs font-medium text-[#1F1E1B] dark:text-white shadow-xs flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                        <span className="truncate">Production</span>
-                      </div>
-                      <div className="px-2 py-1.5 rounded-lg text-xs text-[#6B6861] dark:text-[#9E9B93] hover:bg-white/60 dark:hover:bg-[#252420]/60 transition-colors flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                        <span className="truncate">Stripe API</span>
-                      </div>
-                      <div className="px-2 py-1.5 rounded-lg text-xs text-[#6B6861] dark:text-[#9E9B93] hover:bg-white/60 dark:hover:bg-[#252420]/60 transition-colors flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                        <span className="truncate">Auth Gateway</span>
-                      </div>
-                    </div>
-                  </div>
+                {heroMode === 'video' ? (
+                  /* Video Player Layer */
+                  <div className="relative min-h-[300px] bg-[#161513] flex items-center justify-center overflow-hidden">
+                    {!videoError ? (
+                      <video 
+                        className="w-full h-full object-cover aspect-video"
+                        autoPlay 
+                        loop 
+                        muted 
+                        playsInline
+                        controls
+                        onError={() => setVideoError(true)}
+                      >
+                        <source src="/hero-video.mp4" type="video/mp4" />
+                        <source src="/assets/hero-video.mp4" type="video/mp4" />
+                      </video>
+                    ) : null}
 
-                  {/* Main Content Pane */}
-                  <div className="col-span-8 p-4 text-left flex flex-col justify-between bg-white dark:bg-[#1E1D1A]">
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="text-xs font-semibold text-[#1F1E1B] dark:text-[#F0ECE1]">
-                          api.pulsecheck.dev/health
+                    {/* Elegant Standby Screen if hero-video.mp4 isn't dropped yet */}
+                    {videoError && (
+                      <div className="p-8 text-center flex flex-col items-center justify-center text-[#F0ECE1] bg-gradient-to-b from-[#1E1D1A] to-[#151413] w-full min-h-[300px]">
+                        <div className="h-12 w-12 rounded-full bg-[#FAF8F5]/10 flex items-center justify-center mb-3 text-[#C25E3E]">
+                          <Video className="h-6 w-6" />
                         </div>
-                        <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded">
-                          HTTP 200
-                        </span>
+                        <h4 className="font-serif text-lg font-medium">Hero Video Ready</h4>
+                        <p className="text-xs text-[#9E9B93] max-w-xs mt-1.5 leading-relaxed">
+                          Place your rendered 16:9 MP4 video at <code className="text-[#C25E3E] font-mono bg-white/5 px-1 py-0.5 rounded">frontend/public/hero-video.mp4</code> to auto-stream here seamlessly.
+                        </p>
+                        <button
+                          onClick={() => { setVideoError(false); setHeroMode('live'); }}
+                          className="mt-4 px-4 py-1.5 rounded-full bg-[#FAF8F5] text-[#151413] text-xs font-semibold hover:bg-white transition-all shadow-sm"
+                        >
+                          Switch back to Live Telemetry
+                        </button>
                       </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Interactive Telemetry Canvas with Animated Pointer */
+                  <div className="grid grid-cols-12 min-h-[290px] relative select-none">
+                    
+                    {/* Simulated macOS Cursor Gliding across UI */}
+                    <div 
+                      className="absolute z-30 pointer-events-none transition-all duration-1000 ease-in-out"
+                      style={{ top: `${cursorPos.y}%`, left: `${cursorPos.x}%` }}
+                    >
+                      <svg className="w-5 h-5 drop-shadow-md text-[#1F1E1B]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M4.5 2.5L18.5 13.5L11.5 14.5L8.5 21.5L4.5 2.5Z" stroke="white" strokeWidth="1.5" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
 
-                      {/* Mini Latency Waves */}
-                      <div className="space-y-2 mt-3 font-mono text-[11px]">
-                        {simulatedPings.map((ping) => (
-                          <div key={ping.id} className="p-2 rounded-lg bg-[#FAF8F5] dark:bg-[#161513] border border-[#EAE6DC] dark:border-[#2C2A25] flex items-center justify-between">
-                            <span className="text-[#6B6861] dark:text-[#9E9B93] truncate max-w-[130px]">{ping.name}</span>
-                            <span className="font-semibold text-emerald-600 dark:text-emerald-400">{ping.latency}ms</span>
-                          </div>
-                        ))}
+                    {/* Left Sidebar (Like Finder sidebar in Claude image) */}
+                    <div className="col-span-4 bg-[#F7F4EC] dark:bg-[#181714] p-3 border-r border-[#E8E4DA] dark:border-[#2C2A25] text-left">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-[#8C887F] block mb-2 px-1">
+                        Monitored
+                      </span>
+                      <div className="space-y-1">
+                        <button
+                          onClick={() => setSelectedHeroEndpoint('production')}
+                          className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+                            selectedHeroEndpoint === 'production'
+                              ? 'bg-white dark:bg-[#252420] text-[#1F1E1B] dark:text-white shadow-xs font-semibold'
+                              : 'text-[#6B6861] dark:text-[#9E9B93] hover:bg-white/60 dark:hover:bg-[#252420]/60'
+                          }`}
+                        >
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          <span className="truncate">Production</span>
+                        </button>
+
+                        <button
+                          onClick={() => setSelectedHeroEndpoint('stripe')}
+                          className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+                            selectedHeroEndpoint === 'stripe'
+                              ? 'bg-white dark:bg-[#252420] text-[#1F1E1B] dark:text-white shadow-xs font-semibold'
+                              : 'text-[#6B6861] dark:text-[#9E9B93] hover:bg-white/60 dark:hover:bg-[#252420]/60'
+                          }`}
+                        >
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          <span className="truncate">Stripe API</span>
+                        </button>
+
+                        <button
+                          onClick={() => setSelectedHeroEndpoint('auth')}
+                          className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+                            selectedHeroEndpoint === 'auth'
+                              ? 'bg-white dark:bg-[#252420] text-[#1F1E1B] dark:text-white shadow-xs font-semibold'
+                              : 'text-[#6B6861] dark:text-[#9E9B93] hover:bg-white/60 dark:hover:bg-[#252420]/60'
+                          }`}
+                        >
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          <span className="truncate">Auth Gateway</span>
+                        </button>
                       </div>
                     </div>
 
-                    {/* Window Bottom Status Bar */}
-                    <div className="pt-3 border-t border-[#EAE6DC] dark:border-[#2C2A25] flex items-center justify-between text-[11px] text-[#8C887F]">
-                      <span>Worker Pool: 20 Slots</span>
-                      <span className="font-semibold text-emerald-600 dark:text-emerald-400">99.98% Uptime</span>
+                    {/* Main Content Pane */}
+                    <div className="col-span-8 p-4 text-left flex flex-col justify-between bg-white dark:bg-[#1E1D1A]">
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="text-xs font-semibold text-[#1F1E1B] dark:text-[#F0ECE1] truncate max-w-[160px]">
+                            {currentEndpoint.url}
+                          </div>
+                          <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded">
+                            HTTP {currentEndpoint.status}
+                          </span>
+                        </div>
+
+                        {/* Latency Logs */}
+                        <div className="space-y-1.5 mt-2 font-mono text-[11px]">
+                          {currentEndpoint.logs.map((log, idx) => (
+                            <div key={idx} className="p-2 rounded-lg bg-[#FAF8F5] dark:bg-[#161513] border border-[#EAE6DC] dark:border-[#2C2A25] flex items-center justify-between">
+                              <span className="text-[#6B6861] dark:text-[#9E9B93] truncate max-w-[140px]">{log.name}</span>
+                              <span className="font-semibold text-emerald-600 dark:text-emerald-400">{log.latency}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Window Bottom Status Bar */}
+                      <div className="pt-3 border-t border-[#EAE6DC] dark:border-[#2C2A25] flex items-center justify-between text-[11px] text-[#8C887F]">
+                        <span>Worker Pool: 20 Slots</span>
+                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">{currentEndpoint.uptime} Uptime</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
               </div>
             </div>

@@ -12,11 +12,15 @@ import PublicStatusPage from './pages/PublicStatusPage';
 
 export default function App() {
   const { isAuthenticated, loading } = useAuth();
-  const [currentView, setCurrentView] = useState('landing');
-  const [selectedMonitorId, setSelectedMonitorId] = useState(null);
+  const [currentView, setCurrentView] = useState(() => {
+    return localStorage.getItem('pulsecheck_view') || 'landing';
+  });
+  const [selectedMonitorId, setSelectedMonitorId] = useState(() => {
+    return localStorage.getItem('pulsecheck_selected_monitor') || null;
+  });
   const [publicMonitorId, setPublicMonitorId] = useState(null);
 
-  // Check URL path on initial load (e.g. /status/mon_xyz)
+  // Check URL path on initial load (e.g. /status/mon_xyz) and sync view
   useEffect(() => {
     const path = window.location.pathname;
     if (path.startsWith('/status/')) {
@@ -29,17 +33,35 @@ export default function App() {
     }
 
     if (isAuthenticated) {
-      setCurrentView('dashboard');
+      const savedView = localStorage.getItem('pulsecheck_view');
+      if (savedView === 'monitor-detail' && selectedMonitorId) {
+        setCurrentView('monitor-detail');
+      } else if (savedView === 'billing') {
+        setCurrentView('billing');
+      } else {
+        setCurrentView('dashboard');
+        localStorage.setItem('pulsecheck_view', 'dashboard');
+      }
+    } else {
+      const savedView = localStorage.getItem('pulsecheck_view');
+      if (savedView === 'login' || savedView === 'register') {
+        setCurrentView(savedView);
+      } else {
+        setCurrentView('landing');
+      }
     }
   }, [isAuthenticated]);
 
   const handleNavigate = (view) => {
     setCurrentView(view);
+    localStorage.setItem('pulsecheck_view', view);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectMonitor = (id) => {
     setSelectedMonitorId(id);
+    localStorage.setItem('pulsecheck_selected_monitor', id);
+    localStorage.setItem('pulsecheck_view', 'monitor-detail');
     setCurrentView('monitor-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

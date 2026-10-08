@@ -41,6 +41,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setAuthToken(null);
     localStorage.removeItem('pulsecheck_user');
+    localStorage.removeItem('pulsecheck_view');
+    localStorage.removeItem('pulsecheck_selected_monitor');
   };
 
   const refreshProfile = async () => {
@@ -52,7 +54,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('pulsecheck_user', JSON.stringify(profile));
     } catch (err) {
       console.error('Failed refreshing profile:', err);
-      if (err.status === 401) {
+      if (err.status === 401 || err.status === 403) {
         logout();
       }
     }
@@ -69,7 +71,9 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('pulsecheck_user', JSON.stringify(profile));
         } catch (err) {
           console.warn('Session verification failed on refresh:', err);
-          logout();
+          if (err.status === 401 || err.status === 403) {
+            logout();
+          }
         }
       }
       setLoading(false);
