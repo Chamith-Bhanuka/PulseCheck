@@ -13,14 +13,17 @@ pipeline {
         SQL_INSTANCE          = 'pulsecheck-prod-2026:us-central1:pulsecheck-db'
         IMAGE_BACKEND         = 'us-central1-docker.pkg.dev/pulsecheck-prod-2026/pulsecheck-docker/pulsecheck-backend'
         IMAGE_FRONTEND        = 'us-central1-docker.pkg.dev/pulsecheck-prod-2026/pulsecheck-docker/pulsecheck-frontend'
-        STRIPE_SECRET_KEY     = 'REDACTED_STRIPE_SECRET_KEY'
-        STRIPE_WEBHOOK_SECRET = 'REDACTED_STRIPE_WEBHOOK_SECRET'
-        STRIPE_PRICE_ID       = 'price_1UOAKjLBUoXil15UiQgjd7ms'
         SMTP_HOST             = 'sandbox.smtp.mailtrap.io'
         SMTP_PORT             = '2525'
-        SMTP_USERNAME         = 'REDACTED_SMTP_USERNAME'
-        SMTP_PASSWORD         = 'REDACTED_SMTP_PASSWORD'
         SMTP_FROM_EMAIL       = 'alerts@pulsecheck.dev'
+
+        STRIPE_SECRET_KEY     = credentials('STRIPE_SECRET_KEY')
+        STRIPE_WEBHOOK_SECRET = credentials('STRIPE_WEBHOOK_SECRET')
+        STRIPE_PRICE_ID       = credentials('STRIPE_PRICE_ID')
+        SMTP_USERNAME         = credentials('SMTP_USERNAME')
+        SMTP_PASSWORD         = credentials('SMTP_PASSWORD')
+        DATABASE_URL          = credentials('PULSECHECK_DB_URL')
+        JWT_SECRET            = credentials('PULSECHECK_JWT_SECRET')
     }
 
     stages {
@@ -69,7 +72,7 @@ pipeline {
                         --no-cpu-throttling \
                         --memory=512Mi \
                         --add-cloudsql-instances=${SQL_INSTANCE} \
-                        --set-env-vars="^#^DATABASE_URL=postgres://pulsecheck_admin:REDACTED_DB_PASSWORD@/pulsecheck?host=/cloudsql/${SQL_INSTANCE}#JWT_SECRET=REDACTED_JWT_SECRET#CLIENT_ORIGIN=*#STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}#STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}#STRIPE_PRICE_ID=${STRIPE_PRICE_ID}#SMTP_HOST=${SMTP_HOST}#SMTP_PORT=${SMTP_PORT}#SMTP_USERNAME=${SMTP_USERNAME}#SMTP_PASSWORD=${SMTP_PASSWORD}#SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL}" \
+                        --set-env-vars="^#^DATABASE_URL=${DATABASE_URL}#JWT_SECRET=${JWT_SECRET}#CLIENT_ORIGIN=*#STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}#STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}#STRIPE_PRICE_ID=${STRIPE_PRICE_ID}#SMTP_HOST=${SMTP_HOST}#SMTP_PORT=${SMTP_PORT}#SMTP_USERNAME=${SMTP_USERNAME}#SMTP_PASSWORD=${SMTP_PASSWORD}#SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL}" \
                         --project=${GCP_PROJECT} \
                         --quiet
                 """
