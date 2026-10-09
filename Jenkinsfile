@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+        githubPush()
+    }
+
     environment {
         GCP_PROJECT     = 'pulsecheck-prod-2026'
         GCP_REGION      = 'us-central1'
@@ -98,6 +102,8 @@ pipeline {
                     echo "=========================================="
 
                     curl -s -f "\${BACKEND_URL}/health" || echo "Health check returned response"
+                    curl -s -f "\${FRONTEND_URL}" || echo "Frontend index returned response"
+                    curl -s -f "\${FRONTEND_URL}/api/health" || echo "Frontend API proxy check returned response"
                 """
             }
         }

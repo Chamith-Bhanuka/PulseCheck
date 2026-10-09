@@ -89,12 +89,14 @@ func main() {
 	authMiddleware := auth.RequireAuth(cfg.JWTSecret)
 	corsMiddleware := auth.CORS(cfg.ClientOrigin)
 
-	// Health check route
-	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
+	// Health check routes
+	healthHandler := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"status":"ok","timestamp":"` + time.Now().UTC().Format(time.RFC3339) + `"}`))
-	})
+	}
+	mux.HandleFunc("GET /health", healthHandler)
+	mux.HandleFunc("GET /api/health", healthHandler)
 
 	// Register domain routes if database is available
 	if db != nil {
