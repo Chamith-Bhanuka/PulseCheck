@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+
+	"pulsecheck/internal/user"
 )
 
 var (
@@ -26,25 +28,37 @@ type Service interface {
 }
 
 type service struct {
-	repo Repository
+	repo     Repository
+	userRepo user.Repository
 }
 
-func NewService(repo Repository) Service {
-	return &service{repo: repo}
+func NewService(repo Repository, userRepo ...user.Repository) Service {
+	s := &service{repo: repo}
+	if len(userRepo) > 0 {
+		s.userRepo = userRepo[0]
+	}
+	return s
 }
 
 func (s *service) Create(ctx context.Context, userID, plan string, req CreateRequest) (*Monitor, error) {
-	// 1. Enforce plan monitor count limit
-	count, err := s.repo.CountByUserID(ctx, userID)
-	if err != nil {
-		return nil, fmt.Errorf("failed to verify plan limits: %w", err)
+	// Look up live user plan from repository if available to avoid stale JWT claims
+	if s.userRepo != nil {
+		if u, err := s.userRepo.GetByID(ctx, userID); err == nil && u != nil && u.Plan != "" {
+			plan = u.Plan
+		}
 	}
 
 	maxAllowed := FreeMaxMonitors
 	minInterval := FreeMinIntervalSec
-	if plan == "paid" {
+	if strings.EqualFold(plan, "paid") || strings.EqualFold(plan, "pro") {
 		maxAllowed = PaidMaxMonitors
 		minInterval = PaidMinIntervalSec
+	}
+
+	// 1. Enforce plan monitor count limit
+	count, err := s.repo.CountByUserID(ctx, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to verify plan limits: %w", err)
 	}
 
 	if count >= maxAllowed {
@@ -121,6 +135,13 @@ func (s *service) Update(ctx context.Context, id, userID, plan string, req Updat
 		return nil, err
 	}
 
+	// Look up live user plan from repository if available to avoid stale JWT claims
+	if s.userRepo != nil {
+		if u, err := s.userRepo.GetByID(ctx, userID); err == nil && u != nil && u.Plan != "" {
+			plan = u.Plan
+		}
+	}
+
 	if req.Name != nil {
 		m.Name = strings.TrimSpace(*req.Name)
 	}
@@ -147,7 +168,7 @@ func (s *service) Update(ctx context.Context, id, userID, plan string, req Updat
 	}
 	if req.IntervalSeconds != nil {
 		minInterval := FreeMinIntervalSec
-		if plan == "paid" {
+		if strings.EqualFold(plan, "paid") || strings.EqualFold(plan, "pro") {
 			minInterval = PaidMinIntervalSec
 		}
 		if *req.IntervalSeconds < minInterval {

@@ -99,7 +99,19 @@ func (s *service) Login(ctx context.Context, email, password string) (*AuthRespo
 }
 
 func (s *service) GetProfile(ctx context.Context, id string) (*User, error) {
-	return s.repo.GetByID(ctx, id)
+	u, err := s.repo.GetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if s.jwtSecret != "" {
+		token, err := auth.GenerateToken(u.ID, u.Email, u.Plan, s.jwtSecret, s.jwtExpiryMinutes)
+		if err == nil {
+			u.Token = token
+		}
+	}
+
+	return u, nil
 }
 
 func validateEmail(email string) error {

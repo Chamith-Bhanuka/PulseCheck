@@ -71,7 +71,7 @@ func main() {
 
 	if db != nil {
 		userService = user.NewService(userRepo, cfg.JWTSecret, cfg.JWTExpiryMinutes)
-		monitorService = monitor.NewService(monitorRepo)
+		monitorService = monitor.NewService(monitorRepo, userRepo)
 		checkService = check.NewService(checkRepo, monitorRepo)
 		billingService = billing.NewService(userRepo, cfg.StripeSecretKey, cfg.StripeWebhookSecret, cfg.StripePriceID, cfg.ClientOrigin)
 

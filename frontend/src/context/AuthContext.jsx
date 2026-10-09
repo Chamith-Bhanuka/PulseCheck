@@ -50,6 +50,10 @@ export const AuthProvider = ({ children }) => {
     if (!activeToken) return null;
     try {
       const profile = await api.auth.me();
+      if (profile?.token) {
+        setToken(profile.token);
+        setAuthToken(profile.token);
+      }
       setUser(profile);
       localStorage.setItem('pulsecheck_user', JSON.stringify(profile));
       return profile;
@@ -69,6 +73,10 @@ export const AuthProvider = ({ children }) => {
       if (savedToken) {
         try {
           const profile = await api.auth.me();
+          if (profile?.token) {
+            setToken(profile.token);
+            setAuthToken(profile.token);
+          }
           setUser(profile);
           localStorage.setItem('pulsecheck_user', JSON.stringify(profile));
         } catch (err) {
