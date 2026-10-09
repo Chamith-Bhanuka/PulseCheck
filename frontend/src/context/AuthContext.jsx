@@ -47,16 +47,18 @@ export const AuthProvider = ({ children }) => {
 
   const refreshProfile = async () => {
     const activeToken = getAuthToken();
-    if (!activeToken) return;
+    if (!activeToken) return null;
     try {
       const profile = await api.auth.me();
       setUser(profile);
       localStorage.setItem('pulsecheck_user', JSON.stringify(profile));
+      return profile;
     } catch (err) {
       console.error('Failed refreshing profile:', err);
       if (err.status === 401 || err.status === 403) {
         logout();
       }
+      return null;
     }
   };
 

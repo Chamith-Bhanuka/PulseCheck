@@ -18,8 +18,25 @@ export default function BillingPage({ onNavigate }) {
     const params = new URLSearchParams(window.location.search);
     if (params.get('billing') === 'success') {
       setSuccessBanner(true);
-      refreshProfile();
       window.history.replaceState({}, document.title, window.location.pathname);
+
+      let attempts = 0;
+      let intervalId = null;
+
+      const pollProfile = async () => {
+        attempts += 1;
+        const updated = await refreshProfile();
+        if (updated?.plan === 'paid' || attempts >= 8) {
+          if (intervalId) clearInterval(intervalId);
+        }
+      };
+
+      pollProfile();
+      intervalId = setInterval(pollProfile, 2000);
+
+      return () => {
+        if (intervalId) clearInterval(intervalId);
+      };
     }
   }, []);
 

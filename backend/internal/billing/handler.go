@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 
@@ -75,6 +76,7 @@ func (h *Handler) HandleWebhook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.service.HandleWebhook(r.Context(), payload, sigHeader); err != nil {
+		log.Printf("[STRIPE WEBHOOK HANDLER ERROR] %v", err)
 		if errors.Is(err, ErrInvalidWebhookSignature) {
 			respondJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid signature"})
 			return

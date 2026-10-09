@@ -72,10 +72,11 @@ func (s *service) CreateCheckoutSession(ctx context.Context, userID, userEmail s
 	cancelURL := fmt.Sprintf("%s/dashboard?billing=cancelled", origin)
 
 	params := &stripe.CheckoutSessionParams{
-		Mode:          stripe.String(string(stripe.CheckoutSessionModeSubscription)),
-		CustomerEmail: stripe.String(userEmail),
-		SuccessURL:    stripe.String(successURL),
-		CancelURL:     stripe.String(cancelURL),
+		Mode:              stripe.String(string(stripe.CheckoutSessionModeSubscription)),
+		CustomerEmail:     stripe.String(userEmail),
+		SuccessURL:        stripe.String(successURL),
+		CancelURL:         stripe.String(cancelURL),
+		ClientReferenceID: stripe.String(userID),
 		LineItems: []*stripe.CheckoutSessionLineItemParams{
 			{
 				Price:    stripe.String(s.priceID),
@@ -84,6 +85,11 @@ func (s *service) CreateCheckoutSession(ctx context.Context, userID, userEmail s
 		},
 		Metadata: map[string]string{
 			"user_id": userID,
+		},
+		SubscriptionData: &stripe.CheckoutSessionSubscriptionDataParams{
+			Metadata: map[string]string{
+				"user_id": userID,
+			},
 		},
 	}
 
@@ -96,22 +102,37 @@ func (s *service) CreateCheckoutSession(ctx context.Context, userID, userEmail s
 }
 
 func (s *service) HandleWebhook(ctx context.Context, payload []byte, sigHeader string) error {
-	event, err := webhook.ConstructEvent(payload, sigHeader, s.webhookSecret)
+	event, err := webhook.ConstructEventWithOptions(
+		payload,
+		sigHeader,
+		s.webhookSecret,
+		webhook.ConstructEventOptions{
+			IgnoreAPIVersionMismatch: true,
+		},
+	)
 	if err != nil {
+		log.Printf("[STRIPE WEBHOOK ERROR] Verification failed: %v", err)
 		return fmt.Errorf("%w: %v", ErrInvalidWebhookSignature, err)
 	}
+
+	log.Printf("[STRIPE WEBHOOK] Received event: %s (id: %s)", event.Type, event.ID)
 
 	switch event.Type {
 	case "checkout.session.completed":
 		var sess stripe.CheckoutSession
 		if err := json.Unmarshal(event.Data.Raw, &sess); err != nil {
+			log.Printf("[STRIPE WEBHOOK ERROR] Failed to parse checkout session event data: %v", err)
 			return fmt.Errorf("failed to parse checkout session event data: %w", err)
 		}
 
 		userID, ok := sess.Metadata["user_id"]
 		if !ok || userID == "" {
-			log.Printf("[STRIPE] Missing user_id in checkout.session.completed metadata")
-			return nil
+			if sess.ClientReferenceID != "" {
+				userID = sess.ClientReferenceID
+			} else {
+				log.Printf("[STRIPE WEBHOOK ERROR] Missing user_id in checkout.session.completed metadata and ClientReferenceID")
+				return nil
+			}
 		}
 
 		var customerID *string
@@ -125,9 +146,10 @@ func (s *service) HandleWebhook(ctx context.Context, payload []byte, sigHeader s
 		}
 
 		if err := s.userRepo.UpdatePlan(ctx, userID, user.PlanPaid, customerID, subscriptionID); err != nil {
+			log.Printf("[STRIPE WEBHOOK ERROR] Failed to upgrade user plan in DB: %v", err)
 			return fmt.Errorf("failed to upgrade user plan after checkout: %w", err)
 		}
-		log.Printf("[STRIPE] User %s upgraded to paid plan successfully\n", userID)
+		log.Printf("[STRIPE WEBHOOK] User %s upgraded to paid plan successfully\n", userID)
 
 	case "customer.subscription.deleted":
 		var sub stripe.Subscription
