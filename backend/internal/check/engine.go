@@ -279,6 +279,11 @@ func (e *Engine) ExecuteSingleCheck(ctx context.Context, m *monitor.Monitor) *Re
 		e.triggerDowntimeAlert(ctx, m, statusCode, errMsg)
 	}
 
+	// 4. Alert on recovery transition (was down, now restored)
+	if success && lastResult != nil && !lastResult.Success {
+		e.triggerRecoveryAlert(ctx, m, statusCode, latency)
+	}
+
 	return result
 }
 
@@ -294,4 +299,13 @@ func (e *Engine) triggerDowntimeAlert(ctx context.Context, m *monitor.Monitor, s
 	}
 
 	_ = e.notifier.SendDowntimeAlert(ctx, u.Email, m.Name, m.URL, statusCode, reason)
+}
+
+func (e *Engine) triggerRecoveryAlert(ctx context.Context, m *monitor.Monitor, statusCode int, latency int) {
+	u, err := e.userRepo.GetByID(ctx, m.UserID)
+	if err != nil {
+		return
+	}
+
+	_ = e.notifier.SendRecoveryAlert(ctx, u.Email, m.Name, m.URL, statusCode, latency)
 }

@@ -122,14 +122,22 @@ func (m *mockUserRepoForCheck) UpdatePlan(ctx context.Context, id, plan string, 
 }
 
 type mockNotifier struct {
-	mu           sync.Mutex
-	alertInvoked bool
+	mu              sync.Mutex
+	alertInvoked    bool
+	recoveryInvoked bool
 }
 
 func (m *mockNotifier) SendDowntimeAlert(ctx context.Context, recipientEmail, monitorName, targetURL string, statusCode int, reason string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	m.alertInvoked = true
+	return nil
+}
+
+func (m *mockNotifier) SendRecoveryAlert(ctx context.Context, recipientEmail, monitorName, targetURL string, statusCode int, responseTimeMs int) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.recoveryInvoked = true
 	return nil
 }
 
@@ -198,6 +206,21 @@ func TestCheckEngine_ExecutionAndAlerting(t *testing.T) {
 
 	if !alerted {
 		t.Fatal("expected downtime alert to be triggered on failing endpoint")
+	}
+
+	// 4. Recover m2 (transition from failing back to healthy)
+	monRepo.monitors["m2"].URL = ts.URL + "/health"
+	resRecovered := engine.ExecuteSingleCheck(ctx, monRepo.monitors["m2"])
+	if !resRecovered.Success {
+		t.Fatalf("expected check success on recovered target")
+	}
+
+	notifier.mu.Lock()
+	recovered := notifier.recoveryInvoked
+	notifier.mu.Unlock()
+
+	if !recovered {
+		t.Fatal("expected recovery alert to be triggered when monitor returns to operational")
 	}
 }
 
