@@ -71,7 +71,6 @@ func main() {
 
 	if db != nil {
 		userService = user.NewService(userRepo, cfg.JWTSecret, cfg.JWTExpiryMinutes)
-		monitorService = monitor.NewService(monitorRepo, userRepo)
 		checkService = check.NewService(checkRepo, monitorRepo)
 		billingService = billing.NewService(userRepo, cfg.StripeSecretKey, cfg.StripeWebhookSecret, cfg.StripePriceID, cfg.ClientOrigin)
 
@@ -82,6 +81,8 @@ func main() {
 		} else {
 			log.Println("Concurrent check engine started successfully")
 		}
+
+		monitorService = monitor.NewService(monitorRepo, userRepo, checkEngine)
 	}
 
 	// 6. Router and Middlewares

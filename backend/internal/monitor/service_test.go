@@ -243,3 +243,57 @@ func TestMonitorService_LiveUserRepoPlan(t *testing.T) {
 	}
 }
 
+type mockEngineListener struct {
+	started []*Monitor
+	stopped []string
+}
+
+func (m *mockEngineListener) StartMonitor(mon *Monitor) {
+	m.started = append(m.started, mon)
+}
+
+func (m *mockEngineListener) StopMonitor(id string) {
+	m.stopped = append(m.stopped, id)
+}
+
+func TestMonitorService_EngineListenerEvents(t *testing.T) {
+	repo := newMockMonitorRepo()
+	listener := &mockEngineListener{}
+	svc := NewService(repo, listener)
+	ctx := context.Background()
+
+	// 1. Create monitor -> triggers StartMonitor
+	m, err := svc.Create(ctx, "usr_1", "paid", CreateRequest{
+		URL:             "https://example.com/v1",
+		IntervalSeconds: 30,
+	})
+	if err != nil {
+		t.Fatalf("unexpected error creating monitor: %v", err)
+	}
+	if len(listener.started) != 1 || listener.started[0].URL != "https://example.com/v1" {
+		t.Fatalf("expected listener.StartMonitor with /v1, got %v", listener.started)
+	}
+
+	// 2. Update monitor URL -> triggers StartMonitor with new URL
+	newURL := "https://example.com/v2"
+	_, err = svc.Update(ctx, m.ID, "usr_1", "paid", UpdateRequest{
+		URL: &newURL,
+	})
+	if err != nil {
+		t.Fatalf("unexpected error updating monitor: %v", err)
+	}
+	if len(listener.started) != 2 || listener.started[1].URL != "https://example.com/v2" {
+		t.Fatalf("expected listener.StartMonitor with /v2, got %v", listener.started)
+	}
+
+	// 3. Delete monitor -> triggers StopMonitor
+	err = svc.Delete(ctx, m.ID, "usr_1")
+	if err != nil {
+		t.Fatalf("unexpected error deleting monitor: %v", err)
+	}
+	if len(listener.stopped) != 1 || listener.stopped[0] != m.ID {
+		t.Fatalf("expected listener.StopMonitor with %s, got %v", m.ID, listener.stopped)
+	}
+}
+
+

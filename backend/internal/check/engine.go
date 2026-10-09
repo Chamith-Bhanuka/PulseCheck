@@ -28,8 +28,9 @@ type Engine struct {
 	wg sync.WaitGroup
 
 	// Mutex guards monitor worker cancellation handles across concurrent updates.
-	mu       sync.RWMutex
-	monitors map[string]context.CancelFunc
+	mu             sync.RWMutex
+	monitors       map[string]context.CancelFunc
+	runningConfigs map[string]*monitor.Monitor
 
 	rootCtx    context.Context
 	cancelRoot context.CancelFunc
@@ -57,10 +58,11 @@ func NewEngine(
 			// Hard ceiling on HTTP transport, individual calls use context timeout
 			Timeout: 12 * time.Second,
 		},
-		semaphore:  make(chan struct{}, maxConcurrentWorkers),
-		monitors:   make(map[string]context.CancelFunc),
-		rootCtx:    ctx,
-		cancelRoot: cancel,
+		semaphore:      make(chan struct{}, maxConcurrentWorkers),
+		monitors:       make(map[string]context.CancelFunc),
+		runningConfigs: make(map[string]*monitor.Monitor),
+		rootCtx:        ctx,
+		cancelRoot:     cancel,
 	}
 }
 
@@ -89,6 +91,7 @@ func (e *Engine) Stop() {
 	for id, cancel := range e.monitors {
 		cancel()
 		delete(e.monitors, id)
+		delete(e.runningConfigs, id)
 	}
 	e.mu.Unlock()
 
@@ -106,9 +109,11 @@ func (e *Engine) StartMonitor(m *monitor.Monitor) {
 
 	ctx, cancel := context.WithCancel(e.rootCtx)
 	e.monitors[m.ID] = cancel
+	copyM := *m
+	e.runningConfigs[m.ID] = &copyM
 
 	e.wg.Add(1)
-	go e.runMonitorLoop(ctx, m)
+	go e.runMonitorLoop(ctx, &copyM)
 }
 
 func (e *Engine) StopMonitor(monitorID string) {
@@ -118,6 +123,7 @@ func (e *Engine) StopMonitor(monitorID string) {
 	if cancel, exists := e.monitors[monitorID]; exists {
 		cancel()
 		delete(e.monitors, monitorID)
+		delete(e.runningConfigs, monitorID)
 	}
 }
 
@@ -140,10 +146,18 @@ func (e *Engine) runReconciliationLoop() {
 			for _, m := range active {
 				activeIDs[m.ID] = true
 				e.mu.RLock()
-				_, isRunning := e.monitors[m.ID]
+				cfg, isRunning := e.runningConfigs[m.ID]
 				e.mu.RUnlock()
 
-				if !isRunning {
+				needsRestart := !isRunning ||
+					cfg.URL != m.URL ||
+					cfg.Method != m.Method ||
+					cfg.ExpectedStatus != m.ExpectedStatus ||
+					cfg.IntervalSeconds != m.IntervalSeconds ||
+					cfg.IsActive != m.IsActive ||
+					!cfg.UpdatedAt.Equal(m.UpdatedAt)
+
+				if needsRestart {
 					e.StartMonitor(m)
 				}
 			}
@@ -154,6 +168,7 @@ func (e *Engine) runReconciliationLoop() {
 				if !activeIDs[id] {
 					cancel()
 					delete(e.monitors, id)
+					delete(e.runningConfigs, id)
 				}
 			}
 			e.mu.Unlock()

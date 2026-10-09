@@ -27,15 +27,26 @@ type Service interface {
 	Delete(ctx context.Context, id, userID string) error
 }
 
+type EngineListener interface {
+	StartMonitor(m *Monitor)
+	StopMonitor(monitorID string)
+}
+
 type service struct {
 	repo     Repository
 	userRepo user.Repository
+	listener EngineListener
 }
 
-func NewService(repo Repository, userRepo ...user.Repository) Service {
+func NewService(repo Repository, optional ...interface{}) Service {
 	s := &service{repo: repo}
-	if len(userRepo) > 0 {
-		s.userRepo = userRepo[0]
+	for _, opt := range optional {
+		switch v := opt.(type) {
+		case user.Repository:
+			s.userRepo = v
+		case EngineListener:
+			s.listener = v
+		}
 	}
 	return s
 }
@@ -114,6 +125,10 @@ func (s *service) Create(ctx context.Context, userID, plan string, req CreateReq
 		return nil, fmt.Errorf("failed to save monitor: %w", err)
 	}
 
+	if s.listener != nil && m.IsActive {
+		s.listener.StartMonitor(m)
+	}
+
 	return m, nil
 }
 
@@ -184,11 +199,27 @@ func (s *service) Update(ctx context.Context, id, userID, plan string, req Updat
 		return nil, err
 	}
 
+	if s.listener != nil {
+		if m.IsActive {
+			s.listener.StartMonitor(m)
+		} else {
+			s.listener.StopMonitor(m.ID)
+		}
+	}
+
 	return m, nil
 }
 
 func (s *service) Delete(ctx context.Context, id, userID string) error {
-	return s.repo.Delete(ctx, id, userID)
+	if err := s.repo.Delete(ctx, id, userID); err != nil {
+		return err
+	}
+
+	if s.listener != nil {
+		s.listener.StopMonitor(id)
+	}
+
+	return nil
 }
 
 func isValidMethod(method string) bool {

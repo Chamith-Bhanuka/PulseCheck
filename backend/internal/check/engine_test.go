@@ -200,3 +200,79 @@ func TestCheckEngine_ExecutionAndAlerting(t *testing.T) {
 		t.Fatal("expected downtime alert to be triggered on failing endpoint")
 	}
 }
+
+func TestCheckEngine_MonitorUpdateAndReconciliation(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/v2" {
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("v2"))
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("v1"))
+	}))
+	defer ts.Close()
+
+	checkRepo := newMockCheckRepo()
+	monRepo := &mockMonitorRepoForCheck{monitors: map[string]*monitor.Monitor{
+		"m1": {
+			ID:              "m1",
+			UserID:          "u1",
+			Name:            "App",
+			URL:             ts.URL + "/v1",
+			Method:          "GET",
+			ExpectedStatus:  200,
+			IntervalSeconds: 30,
+			IsActive:        true,
+			UpdatedAt:       time.Now(),
+		},
+	}}
+	userRepo := &mockUserRepoForCheck{}
+	notifier := &mockNotifier{}
+
+	engine := NewEngine(checkRepo, monRepo, userRepo, notifier, 5)
+
+	// 1. Start monitor initially with /v1
+	engine.StartMonitor(monRepo.monitors["m1"])
+
+	engine.mu.RLock()
+	cfg := engine.runningConfigs["m1"]
+	engine.mu.RUnlock()
+
+	if cfg == nil || cfg.URL != ts.URL+"/v1" {
+		t.Fatalf("expected running config URL to be %s, got %v", ts.URL+"/v1", cfg)
+	}
+
+	// 2. Update monitor to /v2 and call StartMonitor
+	updated := &monitor.Monitor{
+		ID:              "m1",
+		UserID:          "u1",
+		Name:            "App",
+		URL:             ts.URL + "/v2",
+		Method:          "GET",
+		ExpectedStatus:  200,
+		IntervalSeconds: 30,
+		IsActive:        true,
+		UpdatedAt:       time.Now().Add(time.Second),
+	}
+	engine.StartMonitor(updated)
+
+	engine.mu.RLock()
+	cfgUpdated := engine.runningConfigs["m1"]
+	engine.mu.RUnlock()
+
+	if cfgUpdated == nil || cfgUpdated.URL != ts.URL+"/v2" {
+		t.Fatalf("expected running config URL to be %s after update, got %v", ts.URL+"/v2", cfgUpdated)
+	}
+
+	// 3. Stop monitor
+	engine.StopMonitor("m1")
+	engine.mu.RLock()
+	_, exists := engine.runningConfigs["m1"]
+	engine.mu.RUnlock()
+
+	if exists {
+		t.Fatalf("expected running config to be removed after StopMonitor")
+	}
+}
+
