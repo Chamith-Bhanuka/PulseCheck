@@ -1,10 +1,13 @@
 package billing
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 
 	"pulsecheck/internal/auth"
 )
@@ -30,13 +33,27 @@ func (h *Handler) CreateCheckout(w http.ResponseWriter, r *http.Request) {
 	}
 	userEmail := auth.GetUserEmail(r.Context())
 
-	checkoutURL, err := h.service.CreateCheckoutSession(r.Context(), userID, userEmail)
+	ctx := r.Context()
+	origin := r.Header.Get("Origin")
+	if origin == "" {
+		referer := r.Header.Get("Referer")
+		if referer != "" {
+			if u, err := url.Parse(referer); err == nil && u.Host != "" {
+				origin = fmt.Sprintf("%s://%s", u.Scheme, u.Host)
+			}
+		}
+	}
+	if origin != "" {
+		ctx = context.WithValue(ctx, RequestOriginKey, origin)
+	}
+
+	checkoutURL, err := h.service.CreateCheckoutSession(ctx, userID, userEmail)
 	if err != nil {
 		if errors.Is(err, ErrMissingPriceID) {
 			respondJSON(w, http.StatusServiceUnavailable, map[string]string{"error": "Billing is currently unavailable"})
 			return
 		}
-		respondJSON(w, http.StatusInternalServerError, map[string]string{"error": "Failed to initiate checkout session"})
+		respondJSON(w, http.StatusInternalServerError, map[string]string{"error": "Failed to initiate checkout session: " + err.Error()})
 		return
 	}
 

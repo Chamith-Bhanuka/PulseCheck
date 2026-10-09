@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/stripe/stripe-go/v78"
 	"github.com/stripe/stripe-go/v78/checkout/session"
@@ -13,6 +14,10 @@ import (
 
 	"pulsecheck/internal/user"
 )
+
+type ContextKey string
+
+const RequestOriginKey ContextKey = "request_origin"
 
 var (
 	ErrInvalidWebhookSignature = errors.New("invalid webhook signature")
@@ -56,8 +61,15 @@ func (s *service) CreateCheckoutSession(ctx context.Context, userID, userEmail s
 		return "", ErrMissingPriceID
 	}
 
-	successURL := fmt.Sprintf("%s/dashboard?billing=success", s.clientOrigin)
-	cancelURL := fmt.Sprintf("%s/dashboard?billing=cancelled", s.clientOrigin)
+	origin := strings.TrimRight(s.clientOrigin, "/")
+	if reqOrigin, ok := ctx.Value(RequestOriginKey).(string); ok && reqOrigin != "" && strings.HasPrefix(reqOrigin, "http") {
+		origin = strings.TrimRight(reqOrigin, "/")
+	} else if origin == "" || origin == "*" || !strings.HasPrefix(origin, "http") {
+		origin = "https://pulsecheck-frontend-uybup6m5va-uc.a.run.app"
+	}
+
+	successURL := fmt.Sprintf("%s/dashboard?billing=success", origin)
+	cancelURL := fmt.Sprintf("%s/dashboard?billing=cancelled", origin)
 
 	params := &stripe.CheckoutSessionParams{
 		Mode:          stripe.String(string(stripe.CheckoutSessionModeSubscription)),
